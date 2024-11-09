@@ -77,8 +77,7 @@ function Register() {
 
 
             axios.post('/api/admins/auth/register', { phone, password, name, username, email }, config).then((data) => {
-                console.log(data);
-                toast.info('!کد یکبار مصرف ارسال شده را در زیر وارد کنید', {
+                toast.success('ثبت نام شدید', {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
