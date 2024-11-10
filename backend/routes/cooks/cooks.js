@@ -66,6 +66,8 @@ router.put('/foods/:foodId/update-food-photo', authCook, upload.foodPhotosUpload
 router.put('/foods/:foodId/update-food-photos', authCook, upload.foodPhotosUpload.single("photos"), cookCtrls.updateFoodPhotos)
 router.delete('/foods/:foodId', authCook, cookCtrls.deleteFood)
 
+// order foods
+router.get('/order-foods', authCook, cookCtrls.orderFoods)
 
 // // router.get('/finance', cookCtrls.finance)
 // // router.get('/my-tickets', cookCtrls.myTickets)

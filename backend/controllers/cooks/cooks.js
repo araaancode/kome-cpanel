@@ -4,6 +4,7 @@ const Cook = require("../../models/Cook")
 const CookAds = require("../../models/CookAds");
 const CookSupportTicket = require('../../models/CookSupportTicket');
 const Food = require('../../models/Food');
+const OrderFood = require('../../models/OrderFood');
 
 // # description -> HTTP VERB -> Accesss -> Access Type
 // # cook get profile -> GET -> Cook -> PRIVATE
@@ -895,7 +896,7 @@ exports.deleteFood = async (req, res) => {
 
 // # description -> HTTP VERB -> Accesss -> Access Type
 // # cook update house map -> PUT -> Cook -> PRIVATE
-// @route = /api/foods/:foodId/update-map
+// @route = /api/cooks/foods/:foodId/update-map
 exports.updateMap = async (req, res) => {
     try {
         let house = await Food.findByIdAndUpdate(req.params.foodId, {
@@ -912,6 +913,35 @@ exports.updateMap = async (req, res) => {
         } else {
             res.status(403).json({
                 msg: 'نقشه ویرایش نشد',
+            })
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            status: 'failure',
+            msg: "خطای داخلی سرور",
+            error
+        });
+    }
+}
+
+// # description -> HTTP VERB -> Accesss -> Access Type
+// # cook update house map -> PUT -> Cook -> PRIVATE
+// @route = /api/cooks/order-foods
+exports.orderFoods = async (req, res) => {
+    try {
+        let orders = await OrderFood.find({})
+        if (orders && orders.length > 0) {
+            return res.status(StatusCodes.OK).json({
+                status: 'success',
+                msg: "سفارش های غذا پیدا شدند",
+                count: orders.length,
+                orders
+            })
+        } else {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                status: 'failure',
+                msg: "سفارش های غذا پیدا نشدند"
             })
         }
     } catch (error) {

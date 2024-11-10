@@ -5,9 +5,11 @@ import { showNotification, setPageTitle } from "../features/common/headerSlice"
 import TitleCard from "../components/Cards/TitleCard"
 import { RECENT_TRANSACTIONS } from "../utils/dummyData"
 import FunnelIcon from '@heroicons/react/24/outline/FunnelIcon'
+import { RiUser3Line } from "@remixicon/react"
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon'
 import SearchBar from "../components/Input/SearchBar"
 const MomentJalali = require("moment-jalaali")
+
 
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
@@ -37,7 +39,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
 
     return (
         <div className="inline-block float-right flex">
-           
+
         </div>
     )
 }
@@ -46,7 +48,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
 function Orders() {
     const dispatch = useDispatch()
     useEffect(() => {
-      dispatch(setPageTitle({ title: "لیست سفارش ها" }))
+        dispatch(setPageTitle({ title: "لیست سفارش ها" }))
     }, [])
 
     const [trans, setTrans] = useState(RECENT_TRANSACTIONS)
@@ -92,8 +94,8 @@ function Orders() {
                                             <td>
                                                 <div className="flex items-center space-x-3">
                                                     <div className="avatar">
-                                                        <div className="mask mask-circle w-12 h-12">
-                                                            <img src={l.avatar} alt="Avatar" />
+                                                        <div className="mask w-12 h-12">
+                                                            <RiUser3Line />
                                                         </div>
                                                     </div>
                                                     <div>
