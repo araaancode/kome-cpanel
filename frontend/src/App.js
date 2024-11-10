@@ -38,6 +38,11 @@ import AdminPrivateRoutes from "./admin/routing/privateRoutes"
 
 import AdminResetPassword from "./admin/features/user/ResetPassword"
 
+// cook private routes
+import CookPublicRoutes from "./cooks/routing/publicRoutes"
+import CookPrivateRoutes from "./cooks/routing/privateRoutes"
+
+
 // Importing pages
 import Layout from "./admin/containers/Layout"
 import Login from "./admin/pages/Login"
@@ -143,11 +148,17 @@ function App() {
             <Route path="/owners/register" element={<OwnersRegister />} />
 
             {/* cooks pages */}
-            <Route path="/cooks" element={<Navigate to={token ? "/cooks/welcome" : "/cooks/login"} replace />} />
-            <Route path="/cooks/*" element={<CooksLayout />} />
-            <Route path="/cooks/login" element={<CooksLogin />} />
-            <Route path="/cooks/forgot-password" element={<CooksForgotPassword />} />
-            <Route path="/cooks/register" element={<CooksRegister />} />
+            <Route element={<CookPublicRoutes />}>
+              {/* <Route path="/cooks" element={<Navigate to={token ? "/cooks/welcome" : "/cooks/login"} replace />} /> */}
+              <Route path="/cooks/login" element={<CooksLogin />} />
+              <Route path="/cooks/forgot-password" element={<CooksForgotPassword />} />
+              <Route path="/cooks/register" element={<CooksRegister />} />
+            </Route>
+
+
+            <Route element={<CookPrivateRoutes />}>
+              <Route path="/cooks/*" element={<CooksLayout />} />
+            </Route>
 
           </Routes>
         </Router>

@@ -7,6 +7,7 @@ const Token = require('../../models/Token');
 const OTP = require("../../models/OTP")
 const { StatusCodes } = require("http-status-codes")
 const bcrypt = require("bcryptjs")
+const sendOTPUtil = require("../../utils/sendOTP")
 
 
 const { sendEmail, sendSuccessEmail } = require("../../utils/sendMail")
@@ -26,6 +27,8 @@ const sendOTPCode = async (phone, cook, req, res) => {
         otp.code = code;
         otp.save().then((data) => {
             if (data) {
+                sendOTPUtil(otp.code, phone)
+
                 res.status(StatusCodes.CREATED).json({
                     msg: "کد تایید ارسال شد",
                     data
@@ -45,6 +48,7 @@ const sendOTPCode = async (phone, cook, req, res) => {
         })
 
         if (newOtp) {
+            sendOTPUtil(newOtp.code, phone)
             res.status(StatusCodes.CREATED).json({
                 msg: "کد تایید جدید ساخته شد",
                 code: newOtp
@@ -98,7 +102,7 @@ exports.register = async (req, res, next) => {
             if (findcook) {
                 res.status(StatusCodes.BAD_REQUEST).json({
                     status: 'failure',
-                    msg: "آشپز وجود دارد. وارد سایت شوید!",
+                    msg: "غذادار وجود دارد. وارد سایت شوید!",
                 })
             } else {
                 let newCook = await Cook.create({
@@ -112,7 +116,7 @@ exports.register = async (req, res, next) => {
                 if (newCook) {
                     res.status(StatusCodes.CREATED).json({
                         status: 'success',
-                        msg: "آشپز با موفقیت ثبت نام شد",
+                        msg: "غذادار با موفقیت ثبت نام شد",
                         _id: newCook._id,
                         name: newCook.name,
                         phone: newCook.phone,
@@ -125,9 +129,7 @@ exports.register = async (req, res, next) => {
             }
         }
 
-
     } catch (error) {
-        console.error(error);
         console.error(error.message);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             status: 'failure',
@@ -151,12 +153,12 @@ exports.login = async (req, res, next) => {
             if (await cook.matchPassword(req.body.password)) {
                 res.status(200).json({
                     status: 'success',
-                    msg: 'آشپز با موفقیت وارد سایت شد',
+                    msg: 'غذادار با موفقیت وارد سایت شد',
                     _id: cook._id,
                     name: cook.name,
                     phone: cook.phone,
                     email: cook.email,
-                    username: cook.username,
+                    cookname: cook.cookname,
                     avatar: cook.avatar,
                     role: cook.role,
                 })
@@ -171,7 +173,7 @@ exports.login = async (req, res, next) => {
         else {
             res.status(StatusCodes.NOT_FOUND).json({
                 status: 'failure',
-                msg: 'آشپز یافت نشد, ثبت نام کنید',
+                msg: 'غذادار یافت نشد, ثبت نام کنید',
             })
         }
     } catch (error) {
@@ -196,7 +198,7 @@ exports.sendOtp = async (req, res) => {
         }
         else {
             res.status(StatusCodes.BAD_REQUEST).json({
-                msg: "آشپز یافت نشد",
+                msg: "غذادار یافت نشد",
             })
         }
     } catch (error) {
@@ -249,7 +251,6 @@ exports.forgotPassword = async (req, res) => {
         if (cook) {
             let token = cook.token
 
-
             if (token) {
                 cook.token = ""
                 await cook.save()
@@ -291,6 +292,7 @@ exports.resetPassword = async (req, res) => {
 
     let findcook = await Cook.findOne({ _id: cookId })
     passwordResetToken = findcook.token
+
 
     if (!passwordResetToken) {
         throw new Error('Invalid or expired password reset token')

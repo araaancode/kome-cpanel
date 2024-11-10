@@ -77,7 +77,6 @@ function Register() {
 
 
             axios.post('/api/cooks/auth/register', { phone, password, name, username, email }, config).then((data) => {
-                console.log(data);
                 toast.success('ثبت نام شدید', {
                     position: "top-right",
                     autoClose: 5000,
@@ -90,7 +89,6 @@ function Register() {
 
                 navigate('/cooks/login')
             }).catch((errMsg) => {
-                console.log(errMsg);
                 toast.error(errMsg.response.data.msg, {
                     position: "top-right",
                     autoClose: 5000,
@@ -233,7 +231,7 @@ function Register() {
                                     >
                                         {loading ? <RiLoader2Fill /> : 'ثبت نام'}
                                     </button>
-                                    <p className='text-sm text-gray-800'>حساب دارید؟ <a href='/admins/login' className='hover:text-blue-900 hover:cursor-pointer'>ورود </a></p>
+                                    <p className='text-sm text-gray-800'>حساب دارید؟ <a href='/cooks/login' className='hover:text-blue-900 hover:cursor-pointer'>ورود </a></p>
                                 </div>
 
                             </form>

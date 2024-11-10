@@ -74,7 +74,7 @@ function Header() {
                     <button className="mx-2" onClick={() => openNotification()}>
                         <div className="indicator">
                             <PiBell className="h-6 w-6" />
-                            {noOfNotifications > 0 ? <span className="indicator-item badge badge-secondary badge-sm">{noOfNotifications}</span> : null}
+                            {noOfNotifications > 0 ? <span className="indicator-item badge badge-secondary badge-sm">{0}</span> : null}
                         </div>
                     </button>
 
