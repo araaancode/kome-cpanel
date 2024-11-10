@@ -258,7 +258,7 @@ exports.forgotPassword = async (req, res) => {
                 let newToken = crypto.randomBytes(32).toString('hex') // raw token
                 let hashedToken = await bcrypt.hash(newToken, 12) // cooked token
 
-                let link = `${process.env.currentURL}/reset-password?token=${newToken}&adminId=${admin._id}`
+                let link = `${process.env.currentURL}/admins/reset-password?token=${newToken}&adminId=${admin._id}`
                 sendEmail(admin, link)
 
                 admin.token = hashedToken
@@ -293,6 +293,7 @@ exports.resetPassword = async (req, res) => {
     let findAdmin = await Admin.findOne({ _id: adminId })
     passwordResetToken = findAdmin.token
 
+
     if (!passwordResetToken) {
         throw new Error('Invalid or expired password reset token')
     }
@@ -320,7 +321,7 @@ exports.resetPassword = async (req, res) => {
             res.status(StatusCodes.BAD_REQUEST).json({ msg: 'خطایی وجود دارد', err })
         })
 
-        let link = `${process.env.currentURL}/login`
+        let link = `${process.env.currentURL}/admins/login`
         sendSuccessEmail(findAdmin, link)
 
     }
