@@ -36,6 +36,8 @@ import PrivateRoutes from "./landing/routing/privateRoutes"
 import AdminPublicRoutes from "./admin/routing/publicRoutes"
 import AdminPrivateRoutes from "./admin/routing/privateRoutes"
 
+import AdminResetPassword from "./admin/features/user/ResetPassword"
+
 // Importing pages
 import Layout from "./admin/containers/Layout"
 import Login from "./admin/pages/Login"
@@ -114,6 +116,7 @@ function App() {
             {/* admins routes*/}
             <Route element={<AdminPublicRoutes />}>
               <Route path="/admins/forgot-password" element={<ForgotPassword />} />
+              <Route path="/admins/reset-password" element={<AdminResetPassword />} />
               <Route path="/admins/login" element={<Login />} />
               <Route path="/admins/register" element={<Register />} />
             </Route>

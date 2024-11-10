@@ -34,7 +34,7 @@ const CooksTickets = lazy(() => import('../pages/CooksTickets'))
 const SingleCookTicket = lazy(() => import('../pages/SingleCookTicket'))
 const OwnersTickets = lazy(() => import('../pages/OwnersTickets'))
 const SingleOwnerTicket = lazy(() => import('../pages/SingleOwnerTicket'))
-
+const ResetPassword = lazy(() => import('../features/user/ResetPassword'))
 
 
 const routes = [
@@ -123,6 +123,11 @@ const routes = [
   {
     path: '/profile',
     component: Profile,
+  },
+
+  {
+    path: '/reset-password',
+    component: ResetPassword,
   },
 ]
 

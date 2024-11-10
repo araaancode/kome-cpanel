@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import LandingIntro from './LandingIntro'
 import ErrorText from '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
@@ -11,31 +11,40 @@ import axios from "axios"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { RiEye2Line, RiEyeCloseLine, RiPhoneLine, RiLoader2Fill, RiLoaderLine } from "@remixicon/react"
+import { RiEye2Line, RiEyeCloseLine, RiPhoneLine, RiLoader2Fill, RiLoaderLine, RiLockPasswordLine } from "@remixicon/react"
 import { MdOutlineSms } from "react-icons/md";
 import { useNavigate } from 'react-router-dom'
 
 
-function ForgotPassword() {
+function ResetPassword() {
 
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [linkSent, setLinkSent] = useState(false)
     const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
 
+    let token=document.URL.split("?")[1].split("&")[0].split("=")[1]
+    let adminId=document.URL.split("?")[1].split("&")[1].split("=")[1]
 
-    const [errorEmailMessage, setErrorEmailMessage] = useState("")
+    const [errorPasswordMessage, setErrorPasswordMessage] = useState("")
+    const [errorConfirmPasswordMessage, setErrorConfirmPasswordMessage] = useState("")
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
     };
 
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value);
+    };
 
     const submitForm = (e) => {
         e.preventDefault()
         setErrorMessage("")
 
-        if (email.trim() === "") return setErrorEmailMessage("ایمیل ضروری است!")
+        if (password.trim() === "") return setErrorPasswordMessage("پسورد ضروری است!")
+        if (confirmPassword.trim() === "") return setErrorConfirmPasswordMessage("نایید پسورد ضروری است!")
         else {
             // setLoading(true)
             // Call API to send password reset link
@@ -49,10 +58,12 @@ function ForgotPassword() {
             }
 
 
-            axios.post('/api/admins/auth/forgot-password', { email }, config).then((data) => {
+            axios.post('/api/admins/auth/reset-password', { password, confirmPassword,adminId,token}, config).then((data) => {
 
                 if (data) {
-                    toast.info('!ایمیل خود را بررسی کنید', {
+                    console.log(data);
+                    
+                    toast.info('!پسورد تغییر کرد', {
                         position: "top-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -65,7 +76,7 @@ function ForgotPassword() {
                 }
             }).catch((errMsg) => {
                 console.log(errMsg);
-                toast.error(errMsg.response.data.msg, {
+                toast.error(errMsg, {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -90,21 +101,20 @@ function ForgotPassword() {
                         <div className="hero min-h-full rounded-l-xl bg-base-200">
                             <div className="hero-content py-6">
                                 <div className="max-w-md">
-                                    <h1 className="mb-10 text-center font-bold text-lg">فراموشی پسورد</h1>
+                                    <h1 className="mb-10 text-center font-bold text-lg">تغییر پسورد</h1>
                                     <div className="text-center mt-0 mb-35"><img src="../intro.jpeg" alt="اقامتگاه" className="w-full rounded rounded-lg inline-block shadow-md"></img></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className='py-10 px-10'>
-                        <h2 className='text-2xl mb-2 text-center'>فراموشی پسورد</h2>
+                        <h2 className='text-2xl mb-2 text-center'>تغییر پسورد</h2>
 
                         {
                             linkSent &&
                             <>
                                 <div className='text-center mt-8'><CheckCircleIcon className='inline-block w-32 text-success' /></div>
-                                <p className='my-4 text-xl font-bold text-center'> لینک فرستاده شد</p>
-                                <p className='mt-4 mb-8 font-semibold text-center'>ایمیل خود را برای تغییر پسورد بررسی کنید</p>
+                                <p className='my-4 text-xl font-bold text-center'> پسورد تغییر کرد</p>
                                 <div className='text-center mt-4'><Link to="/admins/login"><button className="btn btn-block bg-blue-800 text-white hover:bg-blue-900 mt-5">ورود</button></Link></div>
 
                             </>
@@ -113,23 +123,36 @@ function ForgotPassword() {
                         {
                             !linkSent &&
                             <>
-                                <p className='my-8 text-center'>لینک تغییر پسورد به ایمیل شما فرستاده خواهد شد</p>
+                                <p className='mb-6 mt-4 text-center'>در زیر می توانید پسورد خود را تغییر دهید</p>
                                 <form onSubmit={(e) => submitForm(e)}>
 
                                     <div className="flex flex-col mb-2">
-                                        <label htmlFor="phone" className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">ایمیل</label>
+                                        <label htmlFor="phone" className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">پسورد</label>
                                         <div className="relative">
                                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
-                                                <RiMailOpenLine />
+                                                <RiLockPasswordLine />
                                             </div>
-                                            <input style={{ borderRadius: '5px' }} type="text" value={email}
-                                                onChange={handleEmailChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="ایمیل" />
+                                            <input style={{ borderRadius: '5px' }} type="text" value={password}
+                                                onChange={handlePasswordChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="پسورد" />
                                         </div>
-                                        <span className='text-red-500 relative text-sm'>{errorEmailMessage ? errorEmailMessage : ""}</span>
+                                        <span className='text-red-500 relative text-sm'>{errorPasswordMessage ? errorPasswordMessage : ""}</span>
+                                    </div>
+
+
+                                    <div className="flex flex-col mb-2">
+                                        <label htmlFor="phone" className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">تایید پسورد</label>
+                                        <div className="relative">
+                                            <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                                                <RiLockPasswordLine />
+                                            </div>
+                                            <input style={{ borderRadius: '5px' }} type="text" value={confirmPassword}
+                                                onChange={handleConfirmPasswordChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="تایید پسورد" />
+                                        </div>
+                                        <span className='text-red-500 relative text-sm'>{errorConfirmPasswordMessage ? errorConfirmPasswordMessage : ""}</span>
                                     </div>
 
                                     <div className="flex w-full">
-                                        <button type="submit" className="btn mt-5 w-full bg-blue-800 text-white hover:bg-blue-900">فرستادن لینک تغییر</button>
+                                        <button type="submit" className="btn mt-5 w-full bg-blue-800 text-white hover:bg-blue-900">تغییر پسورد</button>
                                     </div>
 
                                     <div className='text-center mt-4'>حساب ندارید؟ <Link to="/admins/register">ثبت نام</Link></div>
@@ -144,4 +167,4 @@ function ForgotPassword() {
     )
 }
 
-export default ForgotPassword
+export default ResetPassword
