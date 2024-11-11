@@ -927,7 +927,7 @@ exports.updateMap = async (req, res) => {
 
 // # description -> HTTP VERB -> Accesss -> Access Type
 // # cook update house map -> PUT -> Cook -> PRIVATE
-// @route = /api/cooks/order-foods
+// @route = /api/cooks/foods/order-foods
 exports.orderFoods = async (req, res) => {
     try {
         let orders = await OrderFood.find({})

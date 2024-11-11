@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux"
 import { showNotification, setPageTitle } from "../features/common/headerSlice"
 import TitleCard from "../components/Cards/TitleCard"
 import { RECENT_TRANSACTIONS } from "../utils/dummyData"
+import axios from "axios"
 import FunnelIcon from '@heroicons/react/24/outline/FunnelIcon'
 import { RiUser3Line } from "@remixicon/react"
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon'
 import SearchBar from "../components/Input/SearchBar"
 const MomentJalali = require("moment-jalaali")
-
 
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
@@ -47,11 +47,14 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
 
 function Orders() {
     const dispatch = useDispatch()
+
     useEffect(() => {
         dispatch(setPageTitle({ title: "لیست سفارش ها" }))
     }, [])
 
     const [trans, setTrans] = useState(RECENT_TRANSACTIONS)
+
+    const [orders, setOrders] = useState([])
 
     const removeFilter = () => {
         setTrans(RECENT_TRANSACTIONS)
@@ -68,6 +71,25 @@ function Orders() {
         setTrans(filteredTransactions)
     }
 
+
+    useEffect(() => {
+        let token = localStorage.getItem("userToken")
+
+        axios.get(`/api/cooks/me`,  {
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': 'Bearer ' + token
+            },
+        }).then((res)=>{
+            console.log(res);
+           
+        }).catch((err)=>{
+            console.log(err);
+        })
+
+    }, [])
+
+
     return (
         <>
 
@@ -78,12 +100,12 @@ function Orders() {
                     <table className="table w-full">
                         <thead>
                             <tr>
-                                <th>نام</th>
-                                <th>شناسه تراکنش</th>
-                                <th>ایمیل</th>
-                                <th>شهر</th>
-                                <th>مقدار</th>
-                                <th>تاریخ تراکنش</th>
+                                <th>شناسه سفارش</th>
+                                <th>نام مشتری</th>
+                                <th>نام غذا</th>
+                                <th>تعداد</th>
+                                <th>وضعیت سفارش</th>
+                                <th>تاریخ سفارش</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -93,11 +115,7 @@ function Orders() {
                                         <tr key={k}>
                                             <td>
                                                 <div className="flex items-center space-x-3">
-                                                    <div className="avatar">
-                                                        <div className="mask w-12 h-12">
-                                                            <RiUser3Line />
-                                                        </div>
-                                                    </div>
+                                                    <RiUser3Line />
                                                     <div>
                                                         <div className="font-bold mr-2">{l.name}</div>
                                                     </div>
