@@ -645,22 +645,22 @@ exports.addCommentsToSupportTicket = async (req, res) => {
 // @route = /api/foods
 exports.getFoods = async (req, res) => {
     try {
-        let foods = await Food.find({})
+        let foods = await Food.find({ chef: req.cook._id })
         let findFoods = []
 
-        for (let i = 0; i < foods.length; i++) {
+        // for (let i = 0; i < foods.length; i++) {
 
-            if (JSON.stringify(req.cook._id) == JSON.stringify(foods[i].chef)) {
-                findFoods.push(foods[i])
-            }
-        }
+        //     if (JSON.stringify(req.cook._id) == JSON.stringify(foods[i].chef)) {
+        //         findFoods.push(foods[i])
+        //     }
+        // }
 
-        if (findFoods) {
+        if (foods && foods.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "غذا ها پیدا شد",
-                count: findFoods.length,
-                findFoods
+                count: foods.length,
+                foods
             })
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
@@ -735,7 +735,7 @@ exports.createFood = async (req, res) => {
         })
 
         if (food) {
-            res.status(StatusCodes.OK).json({
+            res.status(StatusCodes.CREATED).json({
                 status: 'success',
                 msg: 'غذا ایجاد شد',
                 food

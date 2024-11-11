@@ -7,24 +7,17 @@ const orderFoodSchema = new mongoose.Schema(
             ref: 'User',
         },
 
-        cook: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Cook',
-        },
-
-        foods: [
+        foodItems: [
             {
+                name: { type: String, required: true },
+                count: { type: Number, required: true },
+                price: { type: Number, required: true },
                 food: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Food',
-                    required: true,
+                  type: mongoose.Schema.Types.ObjectId,
+                  required: true,
+                  ref: 'Food',
                 },
-                quantity: {
-                    type: Number,
-                    required: true,
-                    default: 1,
-                },
-            },
+              },
         ],
    
         totalPrice: {

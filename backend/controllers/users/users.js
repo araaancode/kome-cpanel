@@ -238,7 +238,7 @@ exports.searchHouses = async (req, res) => {
 exports.getFavoriteHouses = async (req, res) => {
     try {
         let user = await User.findById(req.user._id).select('-password')
-        
+
         if (user.favoriteHouses && user.favoriteHouses.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
@@ -665,7 +665,7 @@ exports.getFoods = async (req, res) => {
     try {
         let foods = await Food.find({ isActive: true, isAvailable: true })
 
-        if (foods) {
+        if (foods && foods.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "غذاها پیدا شدند",
@@ -763,35 +763,34 @@ exports.addFavoriteFood = async (req, res) => {
 // @route = /api/users/foods/order-food
 exports.orderFood = async (req, res) => {
     try {
-        let findFood = await Food.findById({ _id: req.body.food })
-        if (findFood) {
-            let newOrderFood = await OrderFood.create({
-                user: req.user._id,
-                foods: {
-                    food: req.body.food,
-                    quantity: req.body.quantity,
-                },
-                totalPrice: findFood.price * req.body.quantity,
-                address: req.body.address,
-            })
-            if (newOrderFood) {
-                res.status(StatusCodes.CREATED).json({
-                    status: 'success',
-                    msg: "سفارش غذا ثبت شد",
-                    order: newOrderFood
-                });
-            } else {
-                res.status(StatusCodes.BAD_REQUEST).json({
-                    status: 'failure',
-                    msg: "سفارش غذا ثبت نشد",
-                });
-            }
+
+        let totalPrice = 0;
+        let foodItems = req.body.foodItems
+
+        for (let i = 0; i < foodItems.length; i++) {
+            totalPrice += foodItems[i].price * foodItems[i].count
+        }
+
+        let newOrderFood = await OrderFood.create({
+            user: req.user._id,
+            address: req.body.address,
+            ...req.body,
+            totalPrice
+        })
+
+        if (newOrderFood) {
+            res.status(StatusCodes.CREATED).json({
+                status: 'success',
+                msg: "سفارش غذا ثبت شد",
+                order: newOrderFood
+            });
         } else {
             res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'failure',
-                msg: "غذا پیدا نشد",
+                msg: "سفارش غذا ثبت نشد",
             });
         }
+
 
     } catch (error) {
         console.log(error);
@@ -834,14 +833,14 @@ exports.searchFoods = async (req, res) => {
 }
 
 // # description -> HTTP VERB -> Accesss -> Access Type
-// # delete food from favorites list -> PUT -> USER -> PRIVATE
-// @route = /api/users/foods/delete-favorite-food
+// # delete food from favorites list -> DELETE -> USER -> PRIVATE
+// @route = /api/users/foods/delete-favorite-food/:foodId
 exports.deleteFavoriteFood = async (req, res) => {
 
     try {
         let user = await User.findById(req.user._id).populate('favoriteFoods')
         if (user.favoriteFoods.length > 0) {
-            let filterFoods = user.favoriteFoods.filter(f => f._id != req.body.food)
+            let filterFoods = user.favoriteFoods.filter(f => f._id != req.params.foodId)
             user.favoriteFoods = filterFoods
 
             let newUser = await user.save()
@@ -849,19 +848,19 @@ exports.deleteFavoriteFood = async (req, res) => {
             if (newUser) {
                 res.status(StatusCodes.OK).json({
                     status: 'success',
-                    msg: "غذا حذف شد",
+                    msg: "خانه حذف شد",
                     newUser
                 });
             } else {
                 res.status(StatusCodes.BAD_REQUEST).json({
                     status: 'failure',
-                    msg: "غذا حذف نشد",
+                    msg: "خانه حذف نشد",
                 });
             }
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'failure',
-                msg: "غذا حذف نشد"
+                msg: "خانه ها حذف نشد"
             })
         }
     } catch (error) {
@@ -909,18 +908,18 @@ exports.getAllOrderFoods = async (req, res) => {
 // @route = /api/users/foods/orders/:orderId
 exports.getSingleOrderFood = async (req, res) => {
     try {
-        let orderFood = await OrderFood.find({ user: req.user._id, _id: req.params.orderId })
+        let orderFood = await OrderFood.findOne({ user: req.user._id, _id: req.params.orderId })
 
         if (orderFood) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
-                msg: " سفارش غذا پیدا شدند",
+                msg: " سفارش غذا پیدا شد",
                 orderFood: orderFood
             })
         } else {
             return res.status(400).json({
                 status: 'failure',
-                msg: " سفارش غذا پیدا نشدند"
+                msg: " سفارش غذا پیدا نشد"
             })
         }
     } catch (error) {
