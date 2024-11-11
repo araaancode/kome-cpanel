@@ -731,10 +731,11 @@ exports.createHouse = async (req, res) => {
             city: req.body.city,
             cover: req.files.cover[0].filename,
             images,
+            price:req.body.price
         })
 
         if (house) {
-            res.status(StatusCodes.OK).json({
+            res.status(StatusCodes.CREATED).json({
                 status: 'success',
                 msg: 'ملک ایجاد شد',
                 house

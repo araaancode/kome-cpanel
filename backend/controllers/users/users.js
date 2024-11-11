@@ -41,7 +41,7 @@ const determineSeatNumbers = (pL, capacity, seats) => {
 
 exports.getMe = async (req, res) => {
     try {
-        let user = await User.findById(req.user._id).populate('favorites').select('-password')
+        let user = await User.findById(req.user._id).select('-password')
         if (user) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
@@ -69,6 +69,9 @@ exports.getMe = async (req, res) => {
 // # update user profile -> PUT -> user
 exports.updateProfile = async (req, res) => {
     try {
+
+        console.log(req.body);
+
         await User.findByIdAndUpdate(
             req.user._id,
             {
@@ -145,7 +148,7 @@ exports.updateAvatar = async (req, res) => {
 // @route = /api/users/houses
 exports.getHouses = async (req, res) => {
     try {
-        let houses = await House.find({ isActive: true }).populate('owner')
+        let houses = await House.find({ isActive: true, isAvailable: true }).populate('owner')
         if (houses.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
@@ -203,8 +206,9 @@ exports.getHouse = async (req, res) => {
 // @route = /api/users/houses/search-houses
 exports.searchHouses = async (req, res) => {
     try {
+
         let houses = await House.find({ city: req.body.city, isActive: true })
-        if (houses.length > 0) {
+        if (houses && houses.length > 0) {
             res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "اقامتگاه هاپیدا شد",
@@ -233,8 +237,9 @@ exports.searchHouses = async (req, res) => {
 // @route = /api/users/houses/favorite-houses
 exports.getFavoriteHouses = async (req, res) => {
     try {
-        let user = await User.findById(req.user._id).populate('favoriteHouses')
-        if (user.favoriteHouses.length > 0) {
+        let user = await User.findById(req.user._id).select('-password')
+        
+        if (user.favoriteHouses && user.favoriteHouses.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "خانه ها پیدا شدند",
@@ -244,7 +249,7 @@ exports.getFavoriteHouses = async (req, res) => {
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'failure',
-                msg: "خانه ها پیدا نشدند"
+                msg: "خانه ای به لیست مورد علاقه شما افزوده نشده است"
             })
         }
     } catch (error) {
@@ -503,7 +508,7 @@ exports.houseBookings = async (req, res) => {
 // @route = /api/users/houses/bookings/:bookingId
 exports.houseBooking = async (req, res) => {
     try {
-        let booking = await Booking.find({ user: req.user._id, _id: req.params.bookingId }).populate("owner house")
+        let booking = await Booking.findOne({ user: req.user._id, _id: req.params.bookingId }).populate("owner house")
 
         if (booking) {
             return res.status(StatusCodes.OK).json({
