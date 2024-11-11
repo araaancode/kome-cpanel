@@ -7,6 +7,7 @@ const Token = require('../../models/Token');
 const OTP = require("../../models/OTP")
 const { StatusCodes } = require("http-status-codes")
 const bcrypt = require("bcryptjs")
+const sendOTPUtil = require("../../utils/sendOTP")
 
 
 const { sendEmail, sendSuccessEmail } = require("../../utils/sendMail")
@@ -26,6 +27,8 @@ const sendOTPCode = async (phone, driver, req, res) => {
         otp.code = code;
         otp.save().then((data) => {
             if (data) {
+                sendOTPUtil(otp.code, phone)
+
                 res.status(StatusCodes.CREATED).json({
                     msg: "کد تایید ارسال شد",
                     data
@@ -45,6 +48,7 @@ const sendOTPCode = async (phone, driver, req, res) => {
         })
 
         if (newOtp) {
+            sendOTPUtil(newOtp.code, phone)
             res.status(StatusCodes.CREATED).json({
                 msg: "کد تایید جدید ساخته شد",
                 code: newOtp
@@ -98,7 +102,7 @@ exports.register = async (req, res, next) => {
             if (findDriver) {
                 res.status(StatusCodes.BAD_REQUEST).json({
                     status: 'failure',
-                    msg: "راننده وجود دارد. وارد سایت شوید!",
+                    msg: "غذادار وجود دارد. وارد سایت شوید!",
                 })
             } else {
                 let newDriver = await Driver.create({
@@ -112,7 +116,7 @@ exports.register = async (req, res, next) => {
                 if (newDriver) {
                     res.status(StatusCodes.CREATED).json({
                         status: 'success',
-                        msg: "راننده با موفقیت ثبت نام شد",
+                        msg: "غذادار با موفقیت ثبت نام شد",
                         _id: newDriver._id,
                         name: newDriver.name,
                         phone: newDriver.phone,
@@ -124,7 +128,6 @@ exports.register = async (req, res, next) => {
                 }
             }
         }
-
 
     } catch (error) {
         console.error(error.message);
@@ -150,7 +153,7 @@ exports.login = async (req, res, next) => {
             if (await driver.matchPassword(req.body.password)) {
                 res.status(200).json({
                     status: 'success',
-                    msg: 'راننده با موفقیت وارد سایت شد',
+                    msg: 'غذادار با موفقیت وارد سایت شد',
                     _id: driver._id,
                     name: driver.name,
                     phone: driver.phone,
@@ -170,7 +173,7 @@ exports.login = async (req, res, next) => {
         else {
             res.status(StatusCodes.NOT_FOUND).json({
                 status: 'failure',
-                msg: 'راننده یافت نشد, ثبت نام کنید',
+                msg: 'غذادار یافت نشد, ثبت نام کنید',
             })
         }
     } catch (error) {
@@ -195,7 +198,7 @@ exports.sendOtp = async (req, res) => {
         }
         else {
             res.status(StatusCodes.BAD_REQUEST).json({
-                msg: "راننده یافت نشد",
+                msg: "غذادار یافت نشد",
             })
         }
     } catch (error) {
@@ -248,13 +251,12 @@ exports.forgotPassword = async (req, res) => {
         if (driver) {
             let token = driver.token
 
-
             if (token) {
                 driver.token = ""
                 await driver.save()
             } else {
                 let newToken = crypto.randomBytes(32).toString('hex') // raw token
-                let hashedToken = await bcrypt.hash(newToken, 12) // cooked token
+                let hashedToken = await bcrypt.hash(newToken, 12) // drivered token
 
                 let link = `${process.env.currentURL}/drivers/reset-password?token=${newToken}&driverId=${driver._id}`
                 sendEmail(driver, link)
@@ -291,6 +293,7 @@ exports.resetPassword = async (req, res) => {
     let findDriver = await Driver.findOne({ _id: driverId })
     passwordResetToken = findDriver.token
 
+
     if (!passwordResetToken) {
         throw new Error('Invalid or expired password reset token')
     }
@@ -305,7 +308,7 @@ exports.resetPassword = async (req, res) => {
         const hash = await bcrypt.hash(password, 12)
 
 
-        await Driver.findByIdAndUpdate(driverId, {
+        await driver.findByIdAndUpdate(driverId, {
             password: hash,
             token: ""
         }, { new: true }).then((data) => {

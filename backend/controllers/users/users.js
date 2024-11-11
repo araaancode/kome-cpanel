@@ -848,19 +848,19 @@ exports.deleteFavoriteFood = async (req, res) => {
             if (newUser) {
                 res.status(StatusCodes.OK).json({
                     status: 'success',
-                    msg: "خانه حذف شد",
+                    msg: "غذا حذف شد",
                     newUser
                 });
             } else {
                 res.status(StatusCodes.BAD_REQUEST).json({
                     status: 'failure',
-                    msg: "خانه حذف نشد",
+                    msg: "غذا حذف نشد",
                 });
             }
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'failure',
-                msg: "خانه ها حذف نشد"
+                msg: "غذا ها حذف نشد"
             })
         }
     } catch (error) {
@@ -1098,12 +1098,13 @@ exports.addFavoriteBus = async (req, res) => {
 
 // # description -> HTTP VERB -> Accesss -> Access Type
 // # delete bus from favorites list -> PUT -> USER -> PRIVATE
-// @route = /api/users/buses/delete-favorite-bus
+// @route = /api/users/buses/delete-favorite-bus/:busId
 exports.deleteFavoriteBus = async (req, res) => {
+
     try {
-        let user = await User.findById(req.user._id).populate('favoriteFoods')
+        let user = await User.findById(req.user._id).populate('favoriteBuses')
         if (user.favoriteBuses.length > 0) {
-            let filterBuses = user.favoriteBuses.filter(f => f._id != req.body.bus)
+            let filterBuses = user.favoriteBuses.filter(f => f._id != req.params.busId)
             user.favoriteBuses = filterBuses
 
             let newUser = await user.save()
@@ -1123,7 +1124,7 @@ exports.deleteFavoriteBus = async (req, res) => {
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'failure',
-                msg: "اتوبوس حذف نشد"
+                msg: "اتوبوس ها حذف نشد"
             })
         }
     } catch (error) {
@@ -1655,10 +1656,6 @@ exports.bookBus = async (req, res) => {
             }
 
         }
-
-
-
-
     } catch (error) {
         console.error(error);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

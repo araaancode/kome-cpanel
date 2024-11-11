@@ -158,7 +158,7 @@ exports.login = async (req, res, next) => {
                     name: cook.name,
                     phone: cook.phone,
                     email: cook.email,
-                    cookname: cook.cookname,
+                    username: cook.username,
                     avatar: cook.avatar,
                     role: cook.role,
                 })
