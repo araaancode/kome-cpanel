@@ -484,7 +484,7 @@ exports.deleteAds = async (req, res) => {
 exports.supportTickets = async (req, res) => {
     try {
         let tickets = await OwnerSupportTicket.find({})
-        if (tickets) {
+        if (tickets && tickets.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "تیکت های پشتیبانی پیدا شد",
