@@ -1869,7 +1869,7 @@ exports.createNotification = async (req, res) => {
         await UserNotification.create({
             title: req.body.title,
             message: req.body.message,
-            reciever: req.user._id,
+            reciever: req.body.reciever,
         }).then((data) => {
             res.status(StatusCodes.CREATED).json({
                 status: 'success',

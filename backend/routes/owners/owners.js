@@ -4,7 +4,7 @@ const router = express()
 
 const ownerCtrls = require("../../controllers/owners/owners")
 
-const { authOwner } = require("../../middlewares/authOwner")
+const authOwner = require("../../middlewares/authOwner")
 
 const upload = require("../../utils/upload")
 
@@ -15,10 +15,10 @@ router.put('/update-avatar', authOwner, upload.ownerAvatarUpload.single("avatar"
 
 
 // notifications
+router.post('/notifications', ownerCtrls.createNotification)
 router.get('/notifications', authOwner, ownerCtrls.notifications)
 router.get('/notifications/:ntfId', authOwner, ownerCtrls.notification)
-router.post('/notifications', authOwner, ownerCtrls.createNotification)
-router.put('/notifications/:ntfId/mark-notification', ownerCtrls.markNotification)
+router.put('/notifications/:ntfId/mark-notification', authOwner, ownerCtrls.markNotification)
 
 // advertisments
 router.get('/ads', authOwner, ownerCtrls.allAds)

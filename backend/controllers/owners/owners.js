@@ -12,6 +12,7 @@ const OwnerSupportTicket = require('../../models/OwnerSupportTicket');
 exports.getMe = async (req, res) => {
     try {
         let owner = await Owner.findById(req.owner.id).select('-password')
+
         if (owner) {
             res.status(StatusCodes.OK).json({
                 status: 'success',
@@ -86,8 +87,6 @@ exports.updateProfile = async (req, res) => {
 // # owner update avatar -> PUT -> Owner -> PRIVATE
 // @route = /api/owners/update-avatar
 exports.updateAvatar = async (req, res) => {
-    console.log(req.owner);
-
     try {
         await Owner.findByIdAndUpdate(
             req.owner._id,
@@ -133,21 +132,21 @@ exports.updateAvatar = async (req, res) => {
 // @route = /api/owners/notifications
 exports.notifications = async (req, res) => {
     try {
-        let notifications = await OwnerNotification.find({})
-        let findOwnerNotifications = []
+        let notifications = await OwnerNotification.find({ reciever: req.owner._id })
+        // let findOwnerNotifications = []
 
-        for (let i = 0; i < notifications.length; i++) {
-            if (JSON.stringify(notifications[i].reciever) == JSON.stringify(req.owner._id)) {
-                findOwnerNotifications.push(notifications[i])
-            }
-        }
+        // for (let i = 0; i < notifications.length; i++) {
+        //     if (JSON.stringify(notifications[i].reciever) == JSON.stringify(req.owner._id)) {
+        //         findOwnerNotifications.push(notifications[i])
+        //     }
+        // }
 
-        if (findOwnerNotifications) {
+        if (notifications) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "اعلان ها پیدا شد",
-                count: findOwnerNotifications.length,
-                findOwnerNotifications
+                count: notifications.length,
+                notifications
             })
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
@@ -178,7 +177,7 @@ exports.notification = async (req, res) => {
                 notification
             })
         } else {
-            return res.status(StatusCodes.BAD_REQUEST).json({
+            return res.status(StatusCodes.NOT_FOUND).json({
                 status: 'failure',
                 msg: "اعلان پیدا نشد"
             })
@@ -202,7 +201,7 @@ exports.createNotification = async (req, res) => {
         await OwnerNotification.create({
             title: req.body.title,
             message: req.body.message,
-            reciever: req.owner._id,
+            reciever: req.body.reciever,
         }).then((data) => {
             res.status(StatusCodes.CREATED).json({
                 status: 'success',
@@ -731,7 +730,7 @@ exports.createHouse = async (req, res) => {
             city: req.body.city,
             cover: req.files.cover[0].filename,
             images,
-            price:req.body.price
+            price: req.body.price
         })
 
         if (house) {

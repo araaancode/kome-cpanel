@@ -65,7 +65,7 @@ router.post('/buses/search-two-side-bus-tickets', userCtrls.searchTwoSideBusTick
 // notifications
 router.get('/notifications', protect, userCtrls.notifications)
 router.get('/notifications/:ntfId', protect, userCtrls.notification)
-router.post('/notifications', protect, userCtrls.createNotification)
+router.post('/notifications', userCtrls.createNotification)
 router.put('/notifications/:ntfId/mark-notification', protect, userCtrls.markNotification)
 
 // support tickets 
