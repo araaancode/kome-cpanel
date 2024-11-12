@@ -7,10 +7,8 @@ const Token = require('../../models/Token');
 const OTP = require("../../models/OTP")
 const { StatusCodes } = require("http-status-codes")
 const bcrypt = require("bcryptjs")
-
-
 const { sendEmail, sendSuccessEmail } = require("../../utils/sendMail")
-
+const sendOTPUtil = require("../../utils/sendOTP")
 
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -26,6 +24,8 @@ const sendOTPCode = async (phone, owner, req, res) => {
         otp.code = code;
         otp.save().then((data) => {
             if (data) {
+
+                sendOTPUtil(otp.code, phone)
                 res.status(StatusCodes.CREATED).json({
                     msg: "کد تایید ارسال شد",
                     data
@@ -33,6 +33,8 @@ const sendOTPCode = async (phone, owner, req, res) => {
             }
 
         }).catch((error) => {
+            console.log(error);
+
             res.status(StatusCodes.BAD_REQUEST).json({
                 msg: "کد تایید ارسال نشد",
                 error
@@ -45,6 +47,8 @@ const sendOTPCode = async (phone, owner, req, res) => {
         })
 
         if (newOtp) {
+            sendOTPUtil(newOtp.code, phone)
+
             res.status(StatusCodes.CREATED).json({
                 msg: "کد تایید جدید ساخته شد",
                 code: newOtp
@@ -98,7 +102,7 @@ exports.register = async (req, res, next) => {
             if (findOwner) {
                 res.status(StatusCodes.BAD_REQUEST).json({
                     status: 'failure',
-                    msg: "ملک دار وجود دارد. وارد سایت شوید!",
+                    msg: "کاربر وجود دارد. وارد سایت شوید!",
                 })
             } else {
                 let newOwner = await Owner.create({
@@ -112,7 +116,7 @@ exports.register = async (req, res, next) => {
                 if (newOwner) {
                     res.status(StatusCodes.CREATED).json({
                         status: 'success',
-                        msg: "ملک دار با موفقیت ثبت نام شد",
+                        msg: "کاربر با موفقیت ثبت نام شد",
                         _id: newOwner._id,
                         name: newOwner.name,
                         phone: newOwner.phone,
@@ -127,7 +131,6 @@ exports.register = async (req, res, next) => {
 
 
     } catch (error) {
-        console.error(error);
         console.error(error.message);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             status: 'failure',
@@ -151,7 +154,7 @@ exports.login = async (req, res, next) => {
             if (await owner.matchPassword(req.body.password)) {
                 res.status(200).json({
                     status: 'success',
-                    msg: 'ملک دار با موفقیت وارد سایت شد',
+                    msg: 'کاربر با موفقیت وارد سایت شد',
                     _id: owner._id,
                     name: owner.name,
                     phone: owner.phone,
@@ -171,7 +174,7 @@ exports.login = async (req, res, next) => {
         else {
             res.status(StatusCodes.NOT_FOUND).json({
                 status: 'failure',
-                msg: 'ملک دار یافت نشد, ثبت نام کنید',
+                msg: 'کاربر یافت نشد, ثبت نام کنید',
             })
         }
     } catch (error) {
@@ -196,7 +199,7 @@ exports.sendOtp = async (req, res) => {
         }
         else {
             res.status(StatusCodes.BAD_REQUEST).json({
-                msg: "ملک دار یافت نشد",
+                msg: "کاربر یافت نشد",
             })
         }
     } catch (error) {
@@ -245,6 +248,8 @@ exports.logout = (req, res) => {
 exports.forgotPassword = async (req, res) => {
     try {
         let owner = await Owner.findOne({ email: req.body.email })
+        console.log(req.body);
+        
 
         if (owner) {
             let token = owner.token
