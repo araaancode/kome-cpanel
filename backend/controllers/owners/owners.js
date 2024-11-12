@@ -257,17 +257,17 @@ exports.markNotification = async (req, res) => {
 exports.allAds = async (req, res) => {
     try {
         let ads = await OwnerAds.find({ owner: req.owner._id }).populate('owner').select('-password')
-        if (ads) {
+        if (ads && ads.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
-                msg: "آگهی ها پیدا شد",
+                msg: "آگهی ها پیدا شدند",
                 count: ads.length,
                 ads
             })
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'failure',
-                msg: "آگهی ها پیدا نشد"
+                msg: "آگهی ها پیدا نشدند"
             })
         }
     } catch (error) {
