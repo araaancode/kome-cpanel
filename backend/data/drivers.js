@@ -9,8 +9,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "isfahan",
         "lastCity": "tehran",
-        "movingDate": "2024-10-15",
-        "returningDate": "2024-10-17",
+        "movingDate": "2024-11-15",
+        "returningDate": "2024-11-17",
         "isActive": true
     },
     {
@@ -21,8 +21,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "isfahan",
         "lastCity": "tehran",
-        "movingDate": "2024-10-15",
-        "returningDate": "2024-10-18",
+        "movingDate": "2024-11-15",
+        "returningDate": "2024-11-18",
         "isActive": true
     },
     {
@@ -33,8 +33,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "isfahan",
         "lastCity": "tehran",
-        "movingDate": "2024-10-15",
-        "returningDate": "2024-10-18",
+        "movingDate": "2024-11-15",
+        "returningDate": "2024-11-18",
         "isActive": true
     },
     {
@@ -45,8 +45,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "isfahan",
         "lastCity": "tehran",
-        "movingDate": "2024-10-15",
-        "returningDate": "2024-10-18",
+        "movingDate": "2024-11-15",
+        "returningDate": "2024-11-18",
         "isActive": true
     },
     {
@@ -57,8 +57,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "tehran",
         "lastCity": "mashhad",
-        "movingDate": "2024-10-18",
-        "returningDate": "2024-10-21",
+        "movingDate": "2024-11-18",
+        "returningDate": "2024-11-21",
         "isActive": true
     },
     {
@@ -69,8 +69,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "tehran",
         "lastCity": "mashhad",
-        "movingDate": "2024-10-18",
-        "returningDate": "2024-10-21",
+        "movingDate": "2024-11-18",
+        "returningDate": "2024-11-21",
         "isActive": true
     },
     {
@@ -81,8 +81,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "isfahan",
         "lastCity": "mashhad",
-        "movingDate": "2024-10-18",
-        "returningDate": "2024-10-20",
+        "movingDate": "2024-11-18",
+        "returningDate": "2024-11-20",
         "isActive": true
     },
     {
@@ -93,8 +93,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "isfahan",
         "lastCity": "mashhad",
-        "movingDate": "2024-10-18",
-        "returningDate": "2024-10-26",
+        "movingDate": "2024-11-18",
+        "returningDate": "2024-11-26",
         "isActive": true
     },
     {
@@ -105,8 +105,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "isfahan",
         "lastCity": "rasht",
-        "movingDate": "2024-10-18",
-        "returningDate": "2024-10-26",
+        "movingDate": "2024-11-18",
+        "returningDate": "2024-11-26",
         "isActive": true
     },
     {
@@ -117,8 +117,8 @@ const drivers = [
         "password": bcrypt.hashSync('12345678', 12),
         "firstCity": "isfahan",
         "lastCity": "rasht",
-        "movingDate": "2024-10-17",
-        "returningDate": "2024-10-20",
+        "movingDate": "2024-11-17",
+        "returningDate": "2024-11-20",
         "isActive": true
     },
 ]

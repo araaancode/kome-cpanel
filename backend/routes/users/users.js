@@ -8,6 +8,13 @@ const protect = require("../../middlewares/authUser")
 
 const { userUpload } = require("../../utils/upload")
 
+// bus tickets
+router.get('/buses/tickets', protect, userCtrls.getAllBusTickets)
+router.get('/buses/tickets/:ticketId', protect, userCtrls.getSingleBusTicket)
+router.put('/buses/tickets/:ticketId/confirm', protect, userCtrls.confirmBusTicket)
+router.put('/buses/tickets/:ticketId/cancel', protect, userCtrls.cancelBusTicket)
+
+
 // profile
 router.get('/me', protect, userCtrls.getMe)
 router.put('/update-profile', protect, userCtrls.updateProfile)
@@ -47,19 +54,12 @@ router.get('/buses', userCtrls.getBuses)
 router.get('/buses/:busId', userCtrls.getBus)
 router.put('/buses/add-favorite-bus', protect, userCtrls.addFavoriteBus)
 // router.put('/buses/delete-favorite-bus', protect, userCtrls.deleteFavoriteBus)
+router.delete('/buses/delete-favorite-bus/:busId', protect, userCtrls.deleteFavoriteBus)
 router.post('/buses/search-buses', userCtrls.searchBuses)
 
-// *************
 router.post('/buses/book-bus', protect, userCtrls.bookBus)
 router.post('/buses/search-one-side-bus-tickets', userCtrls.searchOneSideBusTickes)
 router.post('/buses/search-two-side-bus-tickets', userCtrls.searchTwoSideBusTickes)
-router.delete('/buses/delete-favorite-bus/:busId', protect, userCtrls.deleteFavoriteBus)
-
-router.get('/buses/tickets', protect, userCtrls.getAllBusTickets)
-router.get('/buses/tickets/:ticketId', protect, userCtrls.getSingleBusTicket)
-router.put('/buses/tickets/:ticketId/confirm', protect, userCtrls.confirmBusTicket)
-router.put('/buses/tickets/:ticketId/cancel', protect, userCtrls.cancelBusTicket)
-// *************
 
 
 // notifications

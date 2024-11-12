@@ -9,7 +9,7 @@ const Driver = require('./models/Driver');
 const Bus = require('./models/Bus');
 // const {houses,owners} = require("./data/data")
 // const drivers=require("./data/drivers")
-const buses=require("./data/buses")
+const buses = require("./data/buses")
 
 const connectDB = require('./config/db');
 
@@ -35,29 +35,29 @@ const importData = async () => {
     // await House.insertMany(sampleHouses)
 
 
-      // import owners
-      // const sampleOwners = owners.map((owner) => {
-      //   return { ...owner }
-      // })
-  
-      // await Owner.insertMany(sampleOwners)
+    // import owners
+    // const sampleOwners = owners.map((owner) => {
+    //   return { ...owner }
+    // })
+
+    // await Owner.insertMany(sampleOwners)
 
 
 
-      // import drivers
-      // const sampleDriver = drivers.map((driver) => {
-      //   return { ...driver }
-      // })
-  
-      // await Driver.insertMany(sampleDriver)
+    // import drivers
+    // const sampleDriver = drivers.map((driver) => {
+    //   return { ...driver }
+    // })
+
+    // await Driver.insertMany(sampleDriver)
 
 
-        // import buses
-        const sampleBus = buses.map((bus) => {
-          return { ...bus }
-        })
-    
-        await Bus.insertMany(sampleBus)
+    // import buses
+    const sampleBus = buses.map((bus) => {
+      return { ...bus }
+    })
+
+    await Bus.insertMany(sampleBus)
 
 
     console.log('Data Imported!'.green.inverse)

@@ -1305,6 +1305,14 @@ exports.bookBus = async (req, res) => {
 
         let validTickets = []
 
+
+        // res.json({
+        //     startHour:userStartHour,
+        //     endHour:userEndHour,
+        //     startMin:userStartMin,
+        //     endMin:userEndMin,
+        // })
+
         if (busTickets && busTickets.length > 0) {
             // *** run bus expiretion date validation ***
             const now = new Date();
@@ -1684,7 +1692,7 @@ exports.updateTicketAfterArrived = async (req, res) => {
 
 exports.getAllBusTickets = async (req, res) => {
     try {
-        let busTickets = await BusTicket.find({})
+        let busTickets = await BusTicket.find({user:req.user._id})
         if (busTickets && busTickets.length > 0) {
             res.status(StatusCodes.OK).json({
                 status: 'success',
