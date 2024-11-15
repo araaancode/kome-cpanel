@@ -646,7 +646,6 @@ exports.addCommentsToSupportTicket = async (req, res) => {
 exports.getFoods = async (req, res) => {
     try {
         let foods = await Food.find({ chef: req.cook._id })
-        let findFoods = []
 
         // for (let i = 0; i < foods.length; i++) {
 
