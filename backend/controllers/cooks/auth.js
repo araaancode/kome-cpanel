@@ -7,11 +7,8 @@ const Token = require('../../models/Token');
 const OTP = require("../../models/OTP")
 const { StatusCodes } = require("http-status-codes")
 const bcrypt = require("bcryptjs")
-const sendOTPUtil = require("../../utils/sendOTP")
-
-
 const { sendEmail, sendSuccessEmail } = require("../../utils/sendMail")
-
+const sendOTPUtil = require("../../utils/sendOTP")
 
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -27,8 +24,8 @@ const sendOTPCode = async (phone, cook, req, res) => {
         otp.code = code;
         otp.save().then((data) => {
             if (data) {
-                sendOTPUtil(otp.code, phone)
 
+                sendOTPUtil(otp.code, phone)
                 res.status(StatusCodes.CREATED).json({
                     msg: "کد تایید ارسال شد",
                     data
@@ -36,6 +33,8 @@ const sendOTPCode = async (phone, cook, req, res) => {
             }
 
         }).catch((error) => {
+            console.log(error);
+
             res.status(StatusCodes.BAD_REQUEST).json({
                 msg: "کد تایید ارسال نشد",
                 error
@@ -49,6 +48,7 @@ const sendOTPCode = async (phone, cook, req, res) => {
 
         if (newOtp) {
             sendOTPUtil(newOtp.code, phone)
+
             res.status(StatusCodes.CREATED).json({
                 msg: "کد تایید جدید ساخته شد",
                 code: newOtp
@@ -97,12 +97,12 @@ exports.register = async (req, res, next) => {
                 msg: "همه فیلدها باید وارد شوند!",
             })
         } else {
-            let findcook = await Cook.findOne({ phone: req.body.phone })
+            let findCook = await Cook.findOne({ phone: req.body.phone })
 
-            if (findcook) {
+            if (findCook) {
                 res.status(StatusCodes.BAD_REQUEST).json({
                     status: 'failure',
-                    msg: "غذادار وجود دارد. وارد سایت شوید!",
+                    msg: "کاربر وجود دارد. وارد سایت شوید!",
                 })
             } else {
                 let newCook = await Cook.create({
@@ -116,7 +116,7 @@ exports.register = async (req, res, next) => {
                 if (newCook) {
                     res.status(StatusCodes.CREATED).json({
                         status: 'success',
-                        msg: "غذادار با موفقیت ثبت نام شد",
+                        msg: "کاربر با موفقیت ثبت نام شد",
                         _id: newCook._id,
                         name: newCook.name,
                         phone: newCook.phone,
@@ -128,6 +128,7 @@ exports.register = async (req, res, next) => {
                 }
             }
         }
+
 
     } catch (error) {
         console.error(error.message);
@@ -153,7 +154,7 @@ exports.login = async (req, res, next) => {
             if (await cook.matchPassword(req.body.password)) {
                 res.status(200).json({
                     status: 'success',
-                    msg: 'غذادار با موفقیت وارد سایت شد',
+                    msg: 'کاربر با موفقیت وارد سایت شد',
                     _id: cook._id,
                     name: cook.name,
                     phone: cook.phone,
@@ -173,7 +174,7 @@ exports.login = async (req, res, next) => {
         else {
             res.status(StatusCodes.NOT_FOUND).json({
                 status: 'failure',
-                msg: 'غذادار یافت نشد, ثبت نام کنید',
+                msg: 'کاربر یافت نشد, ثبت نام کنید',
             })
         }
     } catch (error) {
@@ -198,7 +199,7 @@ exports.sendOtp = async (req, res) => {
         }
         else {
             res.status(StatusCodes.BAD_REQUEST).json({
-                msg: "غذادار یافت نشد",
+                msg: "کاربر یافت نشد",
             })
         }
     } catch (error) {
@@ -290,9 +291,8 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {
     let { cookId, token, password, confirmPassword } = req.body
 
-    let findcook = await Cook.findOne({ _id: cookId })
-    passwordResetToken = findcook.token
-
+    let findCook = await Cook.findOne({ _id: cookId })
+    passwordResetToken = findCook.token
 
     if (!passwordResetToken) {
         throw new Error('Invalid or expired password reset token')
@@ -322,7 +322,7 @@ exports.resetPassword = async (req, res) => {
         })
 
         let link = `${process.env.currentURL}/cooks/login`
-        sendSuccessEmail(findcook, link)
+        sendSuccessEmail(findCook, link)
 
     }
 }
