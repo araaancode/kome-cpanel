@@ -4,7 +4,7 @@ const router = express()
 
 const cookCtrls = require("../../controllers/cooks/cooks")
 
-const { authCook } = require("../../middlewares/authCook")
+const authCook = require("../../middlewares/authCook")
 
 const upload = require("../../utils/upload")
 
@@ -18,7 +18,7 @@ router.put('/update-avatar', authCook, upload.cookAvatarUpload.single("avatar"),
 // notifications
 router.get('/notifications', authCook, cookCtrls.notifications)
 router.get('/notifications/:ntfId', authCook, cookCtrls.notification)
-router.post('/notifications', authCook, cookCtrls.createNotification)
+router.post('/notifications', cookCtrls.createNotification)
 router.put('/notifications/:ntfId/mark-notification', cookCtrls.markNotification)
 
 // advertisments

@@ -131,26 +131,26 @@ exports.updateAvatar = async (req, res) => {
 // @route = /api/cooks/notifications
 exports.notifications = async (req, res) => {
     try {
-        let notifications = await CookNotification.find({})
-        let findCookNotifications = []
+        let notifications = await CookNotification.find({ reciever: req.cook._id })
+        // let findCookNotifications = []
 
-        for (let i = 0; i < notifications.length; i++) {
-            if (JSON.stringify(notifications[i].reciever) == JSON.stringify(req.cook._id)) {
-                findCookNotifications.push(notifications[i])
-            }
-        }
+        // for (let i = 0; i < notifications.length; i++) {
+        //     if (JSON.stringify(notifications[i].reciever) == JSON.stringify(req.cook._id)) {
+        //         findCookNotifications.push(notifications[i])
+        //     }
+        // }
 
-        if (findCookNotifications) {
+        if (notifications && notifications.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
-                msg: "اعلان ها پیدا شد",
-                count: findCookNotifications.length,
-                findCookNotifications
+                msg: "اعلان ها پیدا شدند",
+                count: notifications.length,
+                notifications
             })
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'failure',
-                msg: "اعلان ها پیدا نشد"
+                msg: "اعلان ها پیدا نشدند"
             })
         }
     } catch (error) {
@@ -200,7 +200,7 @@ exports.createNotification = async (req, res) => {
         await CookNotification.create({
             title: req.body.title,
             message: req.body.message,
-            reciever: req.cook._id,
+            reciever: req.body.reciever,
         }).then((data) => {
             res.status(StatusCodes.CREATED).json({
                 status: 'success',
