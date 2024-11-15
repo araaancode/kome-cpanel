@@ -248,8 +248,6 @@ exports.logout = (req, res) => {
 exports.forgotPassword = async (req, res) => {
     try {
         let owner = await Owner.findOne({ email: req.body.email })
-        console.log(req.body);
-        
 
         if (owner) {
             let token = owner.token
