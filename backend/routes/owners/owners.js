@@ -20,7 +20,7 @@ router.get('/notifications', authOwner, ownerCtrls.notifications)
 router.get('/notifications/:ntfId', authOwner, ownerCtrls.notification)
 router.put('/notifications/:ntfId/mark-notification', authOwner, ownerCtrls.markNotification)
 
-// advertisments
+// // advertisments
 router.get('/ads', authOwner, ownerCtrls.allAds)
 router.get('/ads/:adsId', authOwner, ownerCtrls.singleAds)
 router.post('/ads', authOwner, upload.ownerAdsPhotosUpload.fields([
@@ -50,6 +50,7 @@ router.put('/support-tickets/:stId/add-comment', authOwner, ownerCtrls.addCommen
 // houses
 router.get('/houses', authOwner, ownerCtrls.getHouses)
 router.get('/houses/:houseId', authOwner, ownerCtrls.getHouse)
+
 router.post('/houses', authOwner, upload.houseUpload.fields([
     {
         name: "cover",
@@ -60,6 +61,8 @@ router.post('/houses', authOwner, upload.houseUpload.fields([
         maxCount: 6,
     },
 ]), ownerCtrls.createHouse)
+
+
 
 router.put('/houses/:houseId/update-house', authOwner, ownerCtrls.updateHouse)
 router.put('/houses/:houseId/update-cover', authOwner, upload.houseUpload.single("cover"), ownerCtrls.updateCover)

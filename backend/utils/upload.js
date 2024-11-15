@@ -46,6 +46,7 @@ module.exports = {
     houseUpload: multer({
         storage: multer.diskStorage({
             destination: function (req, file, cb) {
+                
                 const made = mkdirp.sync(houseCoverImagesDir);
                 cb(null, houseCoverImagesDir)
             },

@@ -649,26 +649,26 @@ exports.addCommentsToSupportTicket = async (req, res) => {
 // @route = /api/owners/houses
 exports.getHouses = async (req, res) => {
     try {
-        let houses = await House.find({})
-        let findHouses = []
+        let houses = await House.find({ owner: req.owner._id })
+        // let findHouses = []
 
-        for (let i = 0; i < houses.length; i++) {
-            if (JSON.stringify(req.owner._id) == JSON.stringify(houses[i].owner)) {
-                findHouses.push(houses[i])
-            }
-        }
+        // for (let i = 0; i < houses.length; i++) {
+        //     if (JSON.stringify(req.owner._id) == JSON.stringify(houses[i].owner)) {
+        //         findHouses.push(houses[i])
+        //     }
+        // }
 
-        if (findHouses) {
+        if (houses && houses.length) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
-                msg: "خانه ها پیدا شد",
-                count: findHouses.length,
-                findHouses
+                msg: "خانه ها پیدا شدند",
+                count: houses.length,
+                houses
             })
         } else {
-            return res.status(StatusCodes.BAD_REQUEST).json({
+            return res.status(StatusCodes.NOT_FOUND).json({
                 status: 'failure',
-                msg: "خانه ها پیدا نشد"
+                msg: "خانه ها پیدا نشدند"
             })
         }
 
@@ -715,31 +715,30 @@ exports.getHouse = async (req, res) => {
 // # owner create house -> POST -> Owner -> PRIVATE
 // @route = /api/owners/houses
 exports.createHouse = async (req, res) => {
-    try {
-        let images = [];
-        if (req.files.images) {
-            req.files.images.forEach((e) => {
-                images.push(e.filename);
-            });
-        }
+    var images = [];
+    if (req.files.images) {
+        req.files.images.forEach((element) => {
+            images.push(element.filename);
+        });
+    }
 
-        let house = await House.create({
-            owner: req.owner.id,
+    try {
+        await House.create({
+            owner: req.owner._id,
             name: req.body.name,
             province: req.body.province,
             city: req.body.city,
+            description: req.body.description,
+            price: req.body.price,
             cover: req.files.cover[0].filename,
             images,
-            price: req.body.price
-        })
-
-        if (house) {
+        }).then((data) => {
             res.status(StatusCodes.CREATED).json({
                 status: 'success',
-                msg: 'ملک ایجاد شد',
-                house
-            });
-        }
+                msg: "ملک ساخته شد",
+                data
+            })
+        })
     } catch (error) {
         console.error(error.message);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -748,6 +747,56 @@ exports.createHouse = async (req, res) => {
             error
         });
     }
+
+    // try {
+
+    //     // Validate input fields
+    //     if (!req.body.name || !req.body.description || !req.body.price || !req.body.province || !req.body.city) {
+    //         return res.status(400).json({ message: 'Missing required fields' });
+    //     }
+
+      
+        
+
+    //     // If images are uploaded, process and store their paths
+    //     const cover = req.files.cover ? req.files.cover[0].path : null;
+    //     const images = req.files.images ? req.files.images.map(file => file.path) : [];
+
+    //     if (!cover) {
+    //         return res.status(400).json({ message: 'Cover image is required' });
+    //     }
+
+    //     if (images.length > 4) {
+    //         return res.status(400).json({ message: 'You can upload up to 4 additional images' });
+    //     }
+
+    //     // Create the house
+    //     const newHouse = new House({
+    //         owner: req.owner._id,
+    //         name: req.body.name,
+    //         description: req.body.description,
+    //         price: req.body.price,
+    //         province: req.body.province,
+    //         city: req.body.city,
+    //         cover,
+    //         images,
+    //     });
+
+    //     // Save the house to the database
+    //     newHouse.save()
+    //         .then(house => {
+    //             res.status(201).json({
+    //                 message: 'house created successfully!',
+    //                 house,
+    //             });
+    //         })
+    //         .catch(err => {
+    //             res.status(500).json({ message: 'Error creating house', error: err });
+    //         });
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ message: 'An unexpected error occurred' });
+    // }
 }
 
 
