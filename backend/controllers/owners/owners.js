@@ -483,7 +483,7 @@ exports.deleteAds = async (req, res) => {
 // @route = /api/owners/support-tickets
 exports.supportTickets = async (req, res) => {
     try {
-        let tickets = await OwnerSupportTicket.find({})
+        let tickets = await OwnerSupportTicket.find({owner:req.owner._id})
         if (tickets && tickets.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',

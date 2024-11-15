@@ -256,7 +256,7 @@ exports.markNotification = async (req, res) => {
 exports.allAds = async (req, res) => {
     try {
         let ads = await CookAds.find({ cook: req.cook._id }).populate('cook').select('-password')
-        if (ads) {
+        if (ads && ads.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "آگهی ها پیدا شد",
@@ -479,8 +479,8 @@ exports.deleteAds = async (req, res) => {
 // @route = /api/cooks/support-tickets
 exports.supportTickets = async (req, res) => {
     try {
-        let tickets = await CookSupportTicket.find({})
-        if (tickets) {
+        let tickets = await CookSupportTicket.find({ cook: req.cook._id })
+        if (tickets && tickets.length) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "تیکت های پشتیبانی پیدا شد",
