@@ -16,9 +16,14 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
       // find user's obj in db and assign to req.user
-      req.user = await User.findById(decoded.id).select('-password')
+      let user = await User.findById(decoded.id).select('-password')
+      if (user && user.role === "user") {
+        req.user = user
+        next()
+      }else{
+        res.send("you not allowed to do this !!!")
+      }
 
-      next()
     } catch (error) {
       res.status(401)
       throw new Error('Not authorized, invalid token')
