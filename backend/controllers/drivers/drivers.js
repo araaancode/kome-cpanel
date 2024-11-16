@@ -120,32 +120,33 @@ exports.updateAvatar = async (req, res) => {
 // @route = /api/drivers/notifications
 exports.notifications = async (req, res) => {
     try {
-        let notifications = await DriverNotification.find({})
-        let findDriverNotifications = []
 
-        for (let i = 0; i < notifications.length; i++) {
-            if(JSON.stringify(notifications[i].reciever) == JSON.stringify(req.driver._id)){
-                findDriverNotifications.push(notifications[i])
-            }            
-        }
+        let notifications = await DriverNotification.find({reciever: req.driver._id})
+        // let findDriverNotifications = []
+
+        // for (let i = 0; i < notifications.length; i++) {
+        //     if (JSON.stringify(notifications[i].reciever) == JSON.stringify(req.driver._id)) {
+        //         findDriverNotifications.push(notifications[i])
+        //     }
+        // }
 
 
-        if (findDriverNotifications) {
+        if (notifications && notifications.length) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',
-                msg: "اعلان ها پیدا شد",
-                count: findDriverNotifications.length,
-                findDriverNotifications
+                msg: "اعلان ها پیدا شدند",
+                count: notifications.length,
+                notifications
             })
         } else {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'failure',
-                msg: "اعلان ها پیدا نشد"
+                msg: "اعلان ها پیدا نشدند"
             })
         }
     } catch (error) {
         console.log(error);
-        
+
         console.error(error.message);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             status: 'failure',
@@ -191,7 +192,7 @@ exports.createNotification = async (req, res) => {
         await DriverNotification.create({
             title: req.body.title,
             message: req.body.message,
-            reciever: req.driver._id,
+            reciever: req.body.reciever,
         }).then((data) => {
             res.status(StatusCodes.CREATED).json({
                 status: 'success',
@@ -811,12 +812,12 @@ exports.updateDriverBusPhotos = async (req, res) => {
 exports.getBusTickets = async (req, res) => {
     try {
         let busTickets = await BusTicket.find({})
-        let foundBusTickets = [] 
-        
+        let foundBusTickets = []
+
         for (let i = 0; i < busTickets.length; i++) {
-          if(JSON.stringify(busTickets[i].driver) == JSON.stringify(req.driver._id)){
-            foundBusTickets.push(busTickets[i])
-          }
+            if (JSON.stringify(busTickets[i].driver) == JSON.stringify(req.driver._id)) {
+                foundBusTickets.push(busTickets[i])
+            }
         }
 
 
@@ -824,7 +825,7 @@ exports.getBusTickets = async (req, res) => {
             res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: "بلیط های اتوبوس پیدا شد",
-                count:foundBusTickets.length,
+                count: foundBusTickets.length,
                 tickets: foundBusTickets
             })
         } else {

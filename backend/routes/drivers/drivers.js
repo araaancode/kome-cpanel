@@ -17,7 +17,7 @@ router.put('/update-avatar', authDriver, driverUpload.single('avatar'), driverCt
 // notifications
 router.get('/notifications', authDriver, driverCtrls.notifications)
 router.get('/notifications/:ntfId', authDriver, driverCtrls.notification)
-router.post('/notifications', authDriver, driverCtrls.createNotification)
+router.post('/notifications', driverCtrls.createNotification)
 router.put('/notifications/:ntfId/mark-notification', authDriver, driverCtrls.markNotification)
 
 // advertisments
