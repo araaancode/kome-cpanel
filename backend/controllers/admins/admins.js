@@ -124,13 +124,22 @@ exports.updateAvatar = async (req, res) => {
 exports.getNotifications = async (req, res) => {
     try {
         const notifications = await AdminNotification.find({ reciever: req.admin.id }).sort({ createdAt: -1 });
-        res.status(StatusCodes.OK).json({
-            status: 'success',
-            msg: 'اعلان ها دریافت شدند ',
-            success: true,
-            count: notifications.length,
-            data: notifications,
-        });
+        if (notifications && notifications.length > 0) {
+            res.status(StatusCodes.OK).json({
+                status: 'success',
+                msg: 'اعلان ها دریافت شدند ',
+                success: true,
+                count: notifications.length,
+                data: notifications,
+            });
+        } else {
+
+            res.status(StatusCodes.NOT_FOUND).json({
+                status: 'failure',
+                msg: 'اعلان ها دریافت نشدند ',
+                success: false,
+            });
+        }
     } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'failure', success: false, error: err.message });
     }
