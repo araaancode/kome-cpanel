@@ -697,7 +697,7 @@ exports.getAllCooksSupportTickets = async (req, res) => {
 exports.getAllCookSupportTickets = async (req, res) => {
     try {
         const supportTickets = await CookSupportTicket.find({ cook: req.params.cookId })
-        if (supportTickets) {
+        if (supportTickets && supportTickets.length > 0) {
             res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: ' تیکت های پشتیبانی آشپز پیدا شدند ',
@@ -708,7 +708,7 @@ exports.getAllCookSupportTickets = async (req, res) => {
         } else {
             res.status(StatusCodes.NOT_FOUND).json({
                 status: 'failure',
-                msg: ' آشپزی وجود ندارد ',
+                msg: ' تیکت پشتیبانی برای آشپز وجود ندارد ',
                 success: false,
             });
         }
@@ -1336,7 +1336,7 @@ exports.getAllDriversSupportTickets = async (req, res) => {
 exports.getAllDriverSupportTickets = async (req, res) => {
     try {
         const supportTickets = await DriverSupportTicket.find({ driver: req.params.driverId })
-        if (supportTickets) {
+        if (supportTickets && supportTickets.length > 0) {
             res.status(StatusCodes.OK).json({
                 status: 'success',
                 msg: ' تیکت های پشتیبانی راننده پیدا شدند ',
@@ -1347,7 +1347,7 @@ exports.getAllDriverSupportTickets = async (req, res) => {
         } else {
             res.status(StatusCodes.NOT_FOUND).json({
                 status: 'failure',
-                msg: ' راننده وجود ندارد',
+                msg: ' تیکت پشتیبانی برای راننده وجود ندارد',
                 success: false,
             });
         }
