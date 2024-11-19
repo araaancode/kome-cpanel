@@ -1579,7 +1579,7 @@ exports.activeFood = async (req, res) => {
 // @route = /api/admins/foods/:foodId/deactive
 exports.deActiveFood = async (req, res) => {
     try {
-        await Food.findByIdAndUpdate(req.params.foodId, { isActive: true }, { new: true }).then((food) => {
+        await Food.findByIdAndUpdate(req.params.foodId, { isActive: false }, { new: true }).then((food) => {
             if (food) {
                 res.status(StatusCodes.OK).json({
                     status: 'success',
@@ -1590,7 +1590,7 @@ exports.deActiveFood = async (req, res) => {
             } else {
                 res.status(StatusCodes.NOT_FOUND).json({
                     status: 'failure',
-                    msg: 'غذا هنوز غیر فعال است',
+                    msg: 'غذا هنوز فعال است',
                     success: false,
                 });
             }
@@ -1699,7 +1699,7 @@ exports.activeBus = async (req, res) => {
 // @route = /api/admins/buses/:busId/deactive
 exports.deActiveBus = async (req, res) => {
     try {
-        await Bus.findByIdAndUpdate(req.params.busId, { isActive: true }, { new: true }).then((bus) => {
+        await Bus.findByIdAndUpdate(req.params.busId, { isActive: false }, { new: true }).then((bus) => {
             if (bus) {
                 res.status(StatusCodes.OK).json({
                     status: 'success',
@@ -1710,7 +1710,7 @@ exports.deActiveBus = async (req, res) => {
             } else {
                 res.status(StatusCodes.NOT_FOUND).json({
                     status: 'failure',
-                    msg: 'اتوبوس هنوز غیر فعال است',
+                    msg: 'اتوبوس هنوز فعال است',
                     success: false,
                 });
             }
