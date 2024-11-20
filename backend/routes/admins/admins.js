@@ -98,6 +98,8 @@ router.put('/houses/:houseId/deactive', authAdmin, adminCtrls.deActiveHouse)
 // admins
 router.get('/', authAdmin, adminCtrls.getAdmins)
 router.get('/:adminId', authAdmin, adminCtrls.getAdmin)
+router.put('/:adminId/active', authAdmin, adminCtrls.activeAdmin)
+router.put('/:adminId/deactive', authAdmin, adminCtrls.deActiveAdmin)
 router.post('/', authAdmin, adminCtrls.createAdmin)
 router.put('/:adminId/change-role', authAdmin, adminCtrls.changeAdminRole)
 router.delete('/:adminId', authAdmin, adminCtrls.deleteAdmin)

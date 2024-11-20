@@ -69,7 +69,7 @@ const adminSchema = new mongoose.Schema({
   token: {
     type: String,
   },
-  active: {
+  isActive: {
     type: Boolean,
     default: true,
   },

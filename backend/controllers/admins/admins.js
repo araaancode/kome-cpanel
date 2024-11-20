@@ -2008,6 +2008,69 @@ exports.createAdmin = async (req, res) => {
 
 
 // # description -> HTTP VERB -> Accesss -> Access Type
+// # active admin -> PUT -> Admin -> PRIVATE
+// @route = /api/admins/:adminId/active
+exports.activeAdmin = async (req, res) => {
+    try {
+        await Admin.findByIdAndUpdate(req.params.adminId, { isActive: true }, { new: true }).then((admin) => {
+            if (admin) {
+                res.status(StatusCodes.OK).json({
+                    status: 'success',
+                    msg: ' ادمین فعال شد ',
+                    success: true,
+                    admin,
+                });
+            } else {
+                res.status(StatusCodes.NOT_FOUND).json({
+                    status: 'failure',
+                    msg: 'ادمین هنوز غیر فعال است',
+                    success: false,
+                });
+            }
+        })
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            status: 'failure',
+            success: false,
+            msg: "خطای داخلی سرور",
+            error: err.message
+        });
+    }
+}
+
+// # description -> HTTP VERB -> Accesss -> Access Type
+// # active admin -> PUT -> Admin -> PRIVATE
+// @route = /api/admins/:adminId/deactive
+exports.deActiveAdmin = async (req, res) => {
+    try {
+        await Admin.findByIdAndUpdate(req.params.adminId, { isActive: false }, { new: true }).then((admin) => {
+            if (admin) {
+                res.status(StatusCodes.OK).json({
+                    status: 'success',
+                    msg: ' ادمین غیر فعال شد ',
+                    success: true,
+                    admin,
+                });
+            } else {
+                res.status(StatusCodes.NOT_FOUND).json({
+                    status: 'failure',
+                    msg: 'ادمین هنوز فعال است',
+                    success: false,
+                });
+            }
+        })
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            status: 'failure',
+            success: false,
+            msg: "خطای داخلی سرور",
+            error: err.message
+        });
+    }
+}
+
+
+// # description -> HTTP VERB -> Accesss -> Access Type
 // # delete admin -> DELETE -> SUPER Admin -> PRIVATE
 // @route = /api/admins/:adminId
 exports.deleteAdmin = async (req, res) => {
