@@ -89,7 +89,9 @@ function Register() {
 
                 navigate('/cooks/login')
             }).catch((errMsg) => {
-                toast.error(errMsg.response.data.msg, {
+                console.log(errMsg.response.data.msg);
+                
+                toast.error(errMsg.response.data.msg , {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,

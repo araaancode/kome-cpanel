@@ -6,6 +6,9 @@ import InputText from '../../components/Input/InputText'
 import CheckCircleIcon from '@heroicons/react/24/solid/CheckCircleIcon'
 
 import { RiMailOpenLine } from "@remixicon/react"
+import axios from "axios"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ForgotPassword() {
 
@@ -14,7 +17,7 @@ function ForgotPassword() {
     const [linkSent, setLinkSent] = useState(false)
     const [email, setEmail] = useState("")
 
-  
+
     const [errorEmailMessage, setErrorEmailMessage] = useState("")
 
     const handleEmailChange = (e) => {
@@ -26,16 +29,56 @@ function ForgotPassword() {
         e.preventDefault()
         setErrorMessage("")
 
-        if (email.trim() === "") return setErrorEmailMessage("ایمیل ضروری است!")
-        else {
-            setLoading(true)
-            // Call API to send password reset link
-            setLoading(false)
-            setLinkSent(true)
+        if (email) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+
+
+            axios.post('/api/cooks/auth/forgot-password', { email }, config).then((data) => {
+                if(data){
+                    toast.success('لینک تغییر فرستاده شد', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    })
+                }
+
+            }).catch((errMsg) => {
+                console.log(errMsg.response.data.msg);
+
+                toast.error(errMsg.response.data.msg, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            })
+
+
+        } else {
+            toast.error('!!لطفا ایمیل را وارد کنید', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     }
 
- 
+
     return (
         <div className="min-h-screen bg-gray-50 flex items-center text-right">
             <div className="card mx-auto w-full max-w-5xl  shadow-xl">
@@ -59,7 +102,6 @@ function ForgotPassword() {
                                 <div className='text-center mt-8'><CheckCircleIcon className='inline-block w-32 text-success' /></div>
                                 <p className='my-4 text-xl font-bold text-center'> لینک فرستاده شد</p>
                                 <p className='mt-4 mb-8 font-semibold text-center'>ایمیل خود را برای تغییر پسورد بررسی کنید</p>
-                                <div className='text-center mt-4'><Link to="/cooks/login"><button className="btn btn-block bg-blue-800 text-white hover:bg-blue-900 mt-5">ورود</button></Link></div>
 
                             </>
                         }

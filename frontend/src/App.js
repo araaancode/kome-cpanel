@@ -68,6 +68,8 @@ import CooksLogin from "./cooks/pages/Login"
 import CooksRegister from "./cooks/pages/Register"
 import CooksForgotPassword from "./cooks/pages/ForgotPassword"
 
+import CookResetPassword from "./cooks/features/user/ResetPassword"
+
 
 // Initializing different libraries
 initializeApp()
@@ -90,79 +92,78 @@ function App() {
 
   return (
     <>
-      <>
-        <Router>
-          <Routes>
+      <Router>
+        <Routes>
 
-            {/* landing page */}
-            <Route path="/" element={<IndexLayout />}>
-              <Route index element={<IndexPage />} />
-              <Route element={<PublicRoutes />}>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              </Route>
-              <Route element={<PrivateRoutes />}>
-                <Route path="/account/places" element={<HousesPage />} />
-                <Route path="/account/places/new" element={<HousesFormPage />} />
-                <Route path="/account/places/:id" element={<HousesFormPage />} />
-                <Route path="/house/:id" element={<HousePage />} />
-                <Route path="/bookings" element={<BookingsPage />} />
-                <Route path="/bookings/:id" element={<BookingPage />} />
-                <Route path='/profile' element={<ProfilePage />} />
-                <Route path='/search-houses' element={<SearchResultsPage />} />
-                <Route path='/favorites' element={<FavoritesPage />} />
-                <Route path='/bank' element={<BankPage />} />
-                <Route path='/notifications' element={<NotificationsPage />} />
-                <Route path='/support' element={<SupportPage />} />
-              </Route>
+          {/* landing page */}
+          <Route path="/" element={<IndexLayout />}>
+            <Route index element={<IndexPage />} />
+            <Route element={<PublicRoutes />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             </Route>
-
-            {/* admins routes*/}
-            <Route element={<AdminPublicRoutes />}>
-              <Route path="/admins/forgot-password" element={<ForgotPassword />} />
-              <Route path="/admins/reset-password" element={<AdminResetPassword />} />
-              <Route path="/admins/login" element={<Login />} />
-              <Route path="/admins/register" element={<Register />} />
+            <Route element={<PrivateRoutes />}>
+              <Route path="/account/places" element={<HousesPage />} />
+              <Route path="/account/places/new" element={<HousesFormPage />} />
+              <Route path="/account/places/:id" element={<HousesFormPage />} />
+              <Route path="/house/:id" element={<HousePage />} />
+              <Route path="/bookings" element={<BookingsPage />} />
+              <Route path="/bookings/:id" element={<BookingPage />} />
+              <Route path='/profile' element={<ProfilePage />} />
+              <Route path='/search-houses' element={<SearchResultsPage />} />
+              <Route path='/favorites' element={<FavoritesPage />} />
+              <Route path='/bank' element={<BankPage />} />
+              <Route path='/notifications' element={<NotificationsPage />} />
+              <Route path='/support' element={<SupportPage />} />
             </Route>
-            <Route element={<AdminPrivateRoutes />}>
-              <Route path="/admins/*" element={<Layout />} />
-            </Route>
+          </Route>
 
-            {/* <Route path="/admins" element={<Navigate to={token ? "/admins/welcome" : "/admins/login"} replace />} /> */}
+          {/* admins routes*/}
+          <Route element={<AdminPublicRoutes />}>
+            <Route path="/admins/forgot-password" element={<ForgotPassword />} />
+            <Route path="/admins/reset-password" element={<AdminResetPassword />} />
+            <Route path="/admins/login" element={<Login />} />
+            <Route path="/admins/register" element={<Register />} />
+          </Route>
+          <Route element={<AdminPrivateRoutes />}>
+            <Route path="/admins/*" element={<Layout />} />
+          </Route>
 
-
-
-            {/* drivers pages */}
-            <Route path="/drivers" element={<Navigate to={token ? "/drivers/welcome" : "/drivers/login"} replace />} />
-            <Route path="/drivers/*" element={<DriversLayout />} />
-            <Route path="/drivers/login" element={<DriversLogin />} />
-            <Route path="/drivers/forgot-password" element={<DriversForgotPassword />} />
-            <Route path="/drivers/register" element={<DriversRegister />} />
-
-            {/* owners pages */}
-            <Route path="/owners" element={<Navigate to={token ? "/owners/welcome" : "/owners/login"} replace />} />
-            <Route path="/owners/*" element={<OwnersLayout />} />
-            <Route path="/owners/login" element={<OwnersLogin />} />
-            <Route path="/owners/forgot-password" element={<OwnersForgotPassword />} />
-            <Route path="/owners/register" element={<OwnersRegister />} />
-
-            {/* cooks pages */}
-            <Route element={<CookPublicRoutes />}>
-              {/* <Route path="/cooks" element={<Navigate to={token ? "/cooks/welcome" : "/cooks/login"} replace />} /> */}
-              <Route path="/cooks/login" element={<CooksLogin />} />
-              <Route path="/cooks/forgot-password" element={<CooksForgotPassword />} />
-              <Route path="/cooks/register" element={<CooksRegister />} />
-            </Route>
+          {/* <Route path="/admins" element={<Navigate to={token ? "/admins/welcome" : "/admins/login"} replace />} /> */}
 
 
-            <Route element={<CookPrivateRoutes />}>
-              <Route path="/cooks/*" element={<CooksLayout />} />
-            </Route>
 
-          </Routes>
-        </Router>
-      </>
+          {/* drivers pages */}
+          <Route path="/drivers" element={<Navigate to={token ? "/drivers/welcome" : "/drivers/login"} replace />} />
+          <Route path="/drivers/*" element={<DriversLayout />} />
+          <Route path="/drivers/login" element={<DriversLogin />} />
+          <Route path="/drivers/forgot-password" element={<DriversForgotPassword />} />
+          <Route path="/drivers/register" element={<DriversRegister />} />
+
+          {/* owners pages */}
+          <Route path="/owners" element={<Navigate to={token ? "/owners/welcome" : "/owners/login"} replace />} />
+          <Route path="/owners/*" element={<OwnersLayout />} />
+          <Route path="/owners/login" element={<OwnersLogin />} />
+          <Route path="/owners/forgot-password" element={<OwnersForgotPassword />} />
+          <Route path="/owners/register" element={<OwnersRegister />} />
+
+          {/* cooks pages */}
+          <Route element={<CookPublicRoutes />}>
+            {/* <Route path="/cooks" element={<Navigate to={token ? "/cooks/welcome" : "/cooks/login"} replace />} /> */}
+            <Route path="/cooks/login" element={<CooksLogin />} />
+            <Route path="/cooks/forgot-password" element={<CooksForgotPassword />} />
+            <Route path="/cooks/reset-password" element={<CookResetPassword />} />
+            <Route path="/cooks/register" element={<CooksRegister />} />
+          </Route>
+
+
+          <Route element={<CookPrivateRoutes />}>
+            <Route path="/cooks/*" element={<CooksLayout />} />
+          </Route>
+
+        </Routes>
+      </Router>
     </>
   )
 }
