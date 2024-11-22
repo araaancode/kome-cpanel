@@ -161,7 +161,7 @@ function ProfileSettings() {
                                 <CiUser className="w-6 h-6 text-gray-400" />
                             </div>
                             <input style={{ borderRadius: '5px' }} type="text" value={username}
-                                onChange={setUsername} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="  نام کاربری" />
+                                onChange={handleUsernameChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="  نام کاربری" />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
