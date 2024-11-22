@@ -6,6 +6,12 @@ const orderFoodSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
         },
+        
+        cook: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Cook',
+        },
+
 
         foodItems: [
             {
@@ -13,13 +19,13 @@ const orderFoodSchema = new mongoose.Schema(
                 count: { type: Number, required: true },
                 price: { type: Number, required: true },
                 food: {
-                  type: mongoose.Schema.Types.ObjectId,
-                  required: true,
-                  ref: 'Food',
+                    type: mongoose.Schema.Types.ObjectId,
+                    required: true,
+                    ref: 'Food',
                 },
-              },
+            },
         ],
-   
+
         totalPrice: {
             type: Number,
             required: true,
@@ -27,7 +33,7 @@ const orderFoodSchema = new mongoose.Schema(
 
         orderStatus: {
             type: String,
-            enum: ['Pending', 'Preparing', 'Completed', 'Cancelled','Confirmed'],
+            enum: ['Pending', 'Preparing', 'Completed', 'Cancelled', 'Confirmed'],
             default: 'Pending',
         },
 

@@ -9,6 +9,7 @@ import FunnelIcon from '@heroicons/react/24/outline/FunnelIcon'
 import { RiUser3Line } from "@remixicon/react"
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon'
 import SearchBar from "../components/Input/SearchBar"
+import EditIcon from '@iconscout/react-unicons/icons/uil-edit-alt'
 const MomentJalali = require("moment-jalaali")
 
 
@@ -54,7 +55,20 @@ function Orders() {
 
     const [trans, setTrans] = useState(RECENT_TRANSACTIONS)
 
+    const [user, setUser] = useState("")
     const [orders, setOrders] = useState([])
+
+    const getStatus = (status) => {
+        if (status === "Pending") return <div className="badge badge-primary">در حال پردازش</div>
+        if (status === "Cancelled") return <div className="badge badge-ghost">بسته شده</div>
+        if (status === "Closed") return <div className="badge badge-secondary"> نویسنده</div>
+        else return <div className="badge">{status}</div>
+    }
+
+
+    const changeStatus = (id) => {
+        console.log(id)
+    }
 
     const removeFilter = () => {
         setTrans(RECENT_TRANSACTIONS)
@@ -72,22 +86,33 @@ function Orders() {
     }
 
 
+    let token = localStorage.getItem("userToken")
     useEffect(() => {
-        let token = localStorage.getItem("userToken")
-
-        axios.get(`/api/cooks/me`,  {
+        axios.get(`/api/cooks/me`, {
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': 'Bearer ' + token
             },
-        }).then((res)=>{
-            console.log(res);
-           
-        }).catch((err)=>{
+        }).then((res) => {
+            setUser(res.data.cook)
+        }).catch((err) => {
             console.log(err);
         })
 
+        axios.get('/api/cooks/foods/order-foods', {
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                setOrders(response.data.orders);
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }, [])
+
 
 
     return (
@@ -97,41 +122,44 @@ function Orders() {
 
                 {/* Team Member list in table format loaded constant */}
                 <div className="overflow-x-auto w-full">
-                    <table className="table w-full">
+                    {orders.length > 0 ? (<table className="table w-full">
                         <thead>
                             <tr>
                                 <th>شناسه سفارش</th>
                                 <th>نام مشتری</th>
-                                <th>نام غذا</th>
                                 <th>تعداد</th>
                                 <th>وضعیت سفارش</th>
                                 <th>تاریخ سفارش</th>
+                                <th>تغییر وضعیت</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                trans.map((l, k) => {
+                                orders.map((l, k) => {
                                     return (
                                         <tr key={k}>
                                             <td>
                                                 <div className="flex items-center space-x-3">
-                                                    <RiUser3Line />
                                                     <div>
-                                                        <div className="font-bold mr-2">{l.name}</div>
+                                                        <div className="font-bold mr-2">{l._id}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{l.id}</td>
-                                            <td>{l.email}</td>
-                                            <td>{l.location}</td>
-                                            <td>{l.amount}</td>
+                                            <td>{l.user.name}</td>
+                                            <td>{l.foodItems.length}</td>
+                                            <td>{getStatus(l.orderStatus)}</td>
                                             <td>{new Date().toLocaleString("fa")}</td>
+                                            <td><button onClick={() => changeStatus(l._id)}><EditIcon /></button></td>
+
                                         </tr>
                                     )
                                 })
                             }
                         </tbody>
-                    </table>
+                    </table>) : (
+                        <p>هنوز هیچ سفارشی برای شما ثبت نشده است!!</p>
+                    )}
+
                 </div>
             </TitleCard>
         </>

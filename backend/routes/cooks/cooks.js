@@ -49,6 +49,8 @@ router.put('/support-tickets/:stId/read', authCook, cookCtrls.readSupportTicket)
 router.put('/support-tickets/:stId/add-comment', authCook, cookCtrls.addCommentsToSupportTicket)
 
 // foods
+router.get('/foods/order-foods', authCook, cookCtrls.orderFoods)
+
 router.get('/foods', authCook, cookCtrls.getFoods)
 router.get('/foods/:foodId', authCook, cookCtrls.getFood)
 router.post('/foods', authCook, upload.foodPhotosUpload.fields([
@@ -66,7 +68,6 @@ router.put('/foods/:foodId/update-food-photo', authCook, upload.foodPhotosUpload
 router.put('/foods/:foodId/update-food-photos', authCook, upload.foodPhotosUpload.single("photos"), cookCtrls.updateFoodPhotos)
 router.delete('/foods/:foodId', authCook, cookCtrls.deleteFood)
 
-router.get('/foods/order-foods', authCook, cookCtrls.orderFoods)
 
 // // router.get('/finance', cookCtrls.finance)
 // // router.get('/my-tickets', cookCtrls.myTickets)

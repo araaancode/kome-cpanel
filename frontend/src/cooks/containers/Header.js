@@ -8,6 +8,8 @@ import SunIcon from '@heroicons/react/24/outline/SunIcon'
 import { openRightDrawer } from '../features/common/rightDrawerSlice';
 import { RIGHT_DRAWER_TYPES } from '../utils/globalConstantUtil'
 
+import axios from "axios"
+
 import { GoSun } from "react-icons/go";
 import { SlUser } from "react-icons/sl";
 import { PiBell } from "react-icons/pi";
@@ -42,8 +44,13 @@ function Header() {
 
 
     function logoutUser() {
-        localStorage.clear();
-        window.location.href = '/cooks/login'
+        axios.get(`/api/cooks/auth/logout`,{}).then((res) => {
+            console.log("cook logout");
+            localStorage.clear();
+            window.location.href = '/cooks/login'
+        }).catch((err) => {
+            console.log(err);
+        })
     }
 
     return (
