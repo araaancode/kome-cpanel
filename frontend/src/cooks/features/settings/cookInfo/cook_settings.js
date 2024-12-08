@@ -26,6 +26,9 @@ import { TbClockHour12 } from "react-icons/tb";
 import { PiChefHatLight } from "react-icons/pi";
 import { PiBowlFood } from "react-icons/pi";
 
+import Swal from 'sweetalert2'
+import axios from "axios"
+
 function CookSettings() {
 
     const [errorMessage, setErrorMessage] = useState("")
@@ -37,13 +40,49 @@ function CookSettings() {
     const [phone, setPhone] = useState("")
     const [email, setEmail] = useState("")
     const [role, setRole] = useState("")
+    const [province, setProvince] = useState("")
+    const [city, setCity] = useState("")
+    const [address, setAddress] = useState("")
+    const [foodItems, setFoodItems] = useState("")
+    const [count, setCount] = useState(0)
+    const [cookDate, setCookDate] = useState("")
+    const [cookHour, setCookHour] = useState("")
+    const [housePhone, setHousePhone] = useState("")
+    const [foodImage, setFoodImage] = useState("")
 
 
     const dispatch = useDispatch()
 
     // Call API to update profile settings changes
     const updateProfile = () => {
-        dispatch(showNotification({ message: "اطلاعات غذادار ویرایش شد", status: 1 }))
+        // dispatch(showNotification({ message: "اطلاعات غذادار ویرایش شد", status: 1 }))
+        let token = localStorage.getItem("userToken")
+
+        axios.put(`/api/cooks/update-profile`, { name, housePhone, province, city, address, foodItems, count, cookDate, cookHour, housePhone, foodImage }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': 'Bearer ' + token
+            },
+        })
+            .then((response) => {
+                console.log('response', response.data)
+                Swal.fire({
+                    title: "<small>آیا از ویرایش پروفایل اطمینان دارید؟</small>",
+                    showDenyButton: true,
+                    confirmButtonText: "بله",
+                    denyButtonText: `خیر`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire("<small>پروفایل ویرایش شد!</small>", "", "success");
+                    } else if (result.isDenied) {
+                        Swal.fire("<small>تغییرات ذخیره نشد</small>", "", "info");
+                    }
+                });
+            })
+            .catch((error) => {
+                console.log('error', error)
+                Swal.fire("<small>تغییرات ذخیره نشد</small>", "", "error");
+            })
     }
 
     const updateFormValue = ({ updateType, value }) => {
@@ -53,6 +92,44 @@ function CookSettings() {
 
     const handlePhoneChange = (e) => {
         setPhone(e.target.value)
+    }
+
+    const handleProvinceChange = (e) => {
+        setProvince(e.target.value)
+    }
+
+    const handleCityChange = (e) => {
+        setCity(e.target.value)
+    }
+
+    const handleAddressChange = (e) => {
+        setAddress(e.target.value)
+    }
+
+
+    const handleFoodItemsChange = (e) => {
+        setFoodItems(e.target.value)
+    }
+
+    const handleCountChange = (e) => {
+        setCount(e.target.value)
+    }
+
+    const handleCookDateChange = (e) => {
+        setCookDate(e.target.value)
+    }
+
+    const handleCookHourChange = (e) => {
+        setCookHour(e.target.value)
+    }
+
+    const handleNameChange = (e) => {
+        setName(e.target.value)
+    }
+
+
+    const handleFoodImageChange = (e) => {
+        setFoodImage(e.target.value)
     }
 
     return (
@@ -93,8 +170,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <FaMountainCity className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="استان " />
+                            <input style={{ borderRadius: '5px' }} type="text" value={province}
+                                onChange={handleProvinceChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="استان " />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -106,8 +183,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <FaTreeCity className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="شهر " />
+                            <input style={{ borderRadius: '5px' }} type="text" value={city}
+                                onChange={handleCityChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="شهر " />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -120,8 +197,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <HiOutlineLocationMarker className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="آدرس " />
+                            <input style={{ borderRadius: '5px' }} type="text" value={address}
+                                onChange={handleAddressChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="آدرس " />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -133,8 +210,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <IoFastFoodOutline className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="نام غذاها " />
+                            <input style={{ borderRadius: '5px' }} type="text" value={foodItems}
+                                onChange={handleFoodItemsChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="نام غذاها " />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -147,8 +224,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <GoNumber className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="تعداد غذاها " />
+                            <input style={{ borderRadius: '5px' }} type="text" value={count}
+                                onChange={handleCountChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="تعداد غذاها " />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -160,8 +237,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <SlCalender className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder=" تاریخ پخت " />
+                            <input style={{ borderRadius: '5px' }} type="datepicker" value={cookDate}
+                                onChange={handleCookDateChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder=" تاریخ پخت " />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -174,8 +251,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <TbClockHour12 className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder=" ساعت پخت " />
+                            <input style={{ borderRadius: '5px' }} type="datepicker" value={cookHour}
+                                onChange={handleCookHourChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder=" ساعت پخت " />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -187,8 +264,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <PiChefHatLight className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder=" نام آشپز  " />
+                            <input style={{ borderRadius: '5px' }} type="text" value={name}
+                                onChange={handleNameChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder=" نام آشپز  " />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -201,8 +278,8 @@ function CookSettings() {
                             <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                                 <PiBowlFood className="w-6 h-6 text-gray-400" />
                             </div>
-                            <input style={{ borderRadius: '5px' }} type="text" value={phone}
-                                onChange={handlePhoneChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="عکس غذا" />
+                            <input style={{ borderRadius: '5px' }} type="text" value={foodImage}
+                                onChange={handleFoodImageChange} className="text-sm sm:text-base placeholder-gray-400 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-800" placeholder="عکس غذا" />
                         </div>
                         <span className='text-red-500 relative text-sm'>{errorPhoneMessage ? errorPhoneMessage : ""}</span>
                     </div>
@@ -211,7 +288,7 @@ function CookSettings() {
 
                 </div>
 
-                <div className="mt-16"><button className="btn btn-primary float-right" onClick={() => updateProfile()}>ثبت اطلاعات غذادار</button></div>
+                <div className="mt-4"><button className="btn btn-primary float-right" onClick={() => updateProfile()}>ثبت اطلاعات غذادار</button></div>
             </TitleCard>
         </>
     )

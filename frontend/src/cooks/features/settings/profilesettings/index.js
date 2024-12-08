@@ -62,7 +62,6 @@ function ProfileSettings() {
     const updateProfile = () => {
         let token = localStorage.getItem("userToken")
 
-
         axios.put(`/api/cooks/update-profile`, { name, phone, email, username,gender, province, city, nationalCode }, {
             headers: {
                 'Content-Type': 'application/json',

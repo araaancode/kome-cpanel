@@ -51,17 +51,6 @@ const routes = [
   },
 
   {
-    path: '/cooks/financials', // url
-    icon: <MoneyIcon className={iconClasses}/>, // icon component
-    name: 'قسمت مالی', // name that appear in Sidebar
-  },
-  {
-    path: '/cooks/cooks',
-    icon: <VscVerified size="140" className={iconClasses} />, 
-    name: 'تایید یا عدم غذادار',
-  },
-   
-  {
     path: '/cooks/comments', // url
     icon: <ChatIcon size="140" className={iconClasses} />, // icon component
     name: ' نظرات کاربران ', // name that appear in Sidebar

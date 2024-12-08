@@ -929,7 +929,7 @@ exports.updateMap = async (req, res) => {
 // @route = /api/cooks/foods/order-foods
 exports.orderFoods = async (req, res) => {
     try {
-        let orders = await OrderFood.find({ }).populate('user')
+        let orders = await OrderFood.find({}).populate('user')
         if (orders && orders.length > 0) {
             return res.status(StatusCodes.OK).json({
                 status: 'success',

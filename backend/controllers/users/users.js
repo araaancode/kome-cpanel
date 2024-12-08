@@ -767,29 +767,38 @@ exports.orderFood = async (req, res) => {
         let totalPrice = 0;
         let foodItems = req.body.foodItems
 
+
         for (let i = 0; i < foodItems.length; i++) {
-            totalPrice += foodItems[i].price * foodItems[i].count
+            let findFood = await Food.findOne({ _id: foodItems[i].food }).populate('chef')
+            console.log(findFood.price)
         }
 
-        let newOrderFood = await OrderFood.create({
-            user: req.user._id,
-            address: req.body.address,
-            ...req.body,
-            totalPrice
-        })
+        res.send("test")
 
-        if (newOrderFood) {
-            res.status(StatusCodes.CREATED).json({
-                status: 'success',
-                msg: "سفارش غذا ثبت شد",
-                order: newOrderFood
-            });
-        } else {
-            res.status(StatusCodes.BAD_REQUEST).json({
-                status: 'failure',
-                msg: "سفارش غذا ثبت نشد",
-            });
-        }
+        // for (let i = 0; i < foodItems.length; i++) {
+        //     totalPrice += foodItems[i].price * foodItems[i].count
+        // }
+
+        // let newOrderFood = await OrderFood.create({
+        //     cook:req.body.cook,
+        //     user: req.user._id,
+        //     address: req.body.address,
+        //     ...req.body,
+        //     totalPrice
+        // })
+
+        // if (newOrderFood) {
+        //     res.status(StatusCodes.CREATED).json({
+        //         status: 'success',
+        //         msg: "سفارش غذا ثبت شد",
+        //         order: newOrderFood
+        //     });
+        // } else {
+        //     res.status(StatusCodes.BAD_REQUEST).json({
+        //         status: 'failure',
+        //         msg: "سفارش غذا ثبت نشد",
+        //     });
+        // }
 
 
     } catch (error) {
@@ -1692,7 +1701,7 @@ exports.updateTicketAfterArrived = async (req, res) => {
 
 exports.getAllBusTickets = async (req, res) => {
     try {
-        let busTickets = await BusTicket.find({user:req.user._id})
+        let busTickets = await BusTicket.find({ user: req.user._id })
         if (busTickets && busTickets.length > 0) {
             res.status(StatusCodes.OK).json({
                 status: 'success',

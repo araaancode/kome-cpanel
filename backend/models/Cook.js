@@ -78,6 +78,10 @@ const cookSchema = new mongoose.Schema({
     default: true,
   },
 
+  housePhone:{
+    type:String
+  },
+
   favorites: [
     {
       type: mongoose.Schema.Types.ObjectId,
