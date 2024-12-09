@@ -78,7 +78,7 @@ initializeApp()
 // const token = checkAuth()
 const token = localStorage.getItem("token")
 
-axios.defaults.baseURL = "http://localhost:5000/";
+axios.defaults.baseURL = "https://kome-backend.onrender.com/";
 axios.defaults.withCredentials = true;
 
 
